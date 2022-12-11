@@ -1,8 +1,12 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "TankPawn.generated.h"
+
+class UStaticMeshComponent;
 
 UCLASS()
 class TANKOGEDDON_API ATankPawn : public APawn
@@ -13,8 +17,22 @@ public:
 	ATankPawn();
 
 protected:
-	virtual void BeginPlay() override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UStaticMeshComponent* BodyMesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UStaticMeshComponent* TurretMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	class UBoxComponent* BoxCollision;
+
+	/*
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
+	float MoveSpeed = 100;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
+	float RotationSpeed = 100;
+	*/
 public:	
 	virtual void Tick(float DeltaTime) override;
 
