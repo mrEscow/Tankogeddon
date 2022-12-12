@@ -16,6 +16,10 @@ class TANKOGEDDON_API ATankPawn : public APawn
 public:
 	ATankPawn();
 
+	virtual void Tick(float DeltaTime) override;
+
+	void MoveForward(float Value);
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UStaticMeshComponent* BodyMesh;
@@ -26,14 +30,20 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	class UBoxComponent* BoxCollision;
 
-	/*
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
-	float MoveSpeed = 100;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	class USpringArmComponent* SpringArm;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
-	float RotationSpeed = 100;
-	*/
-public:	
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	class UCameraComponent* Camera;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
+	float MoveSpeed = 100.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
+	float RotationSpeed = 100.0f;
+
+	float targetForwardAxisValue = 0.0f;
+
+
 
 };
