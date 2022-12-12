@@ -11,6 +11,8 @@ void ATankPlayerController::SetupInputComponent()
 
 	InputComponent->BindAxis("MoveForward", this, &ATankPlayerController::MoveForward);
 	InputComponent->BindAxis("RotationForward", this, &ATankPlayerController::RotationForward);
+
+	InputComponent->BindAction("Fire",EInputEvent::IE_Pressed ,this, &ATankPlayerController::Fire);
 }
 
 void ATankPlayerController::Tick(float DeltaSeconds)
@@ -50,5 +52,13 @@ void ATankPlayerController::RotationForward(float Value)
 	if (TankPawn)
 	{
 		TankPawn->RotationForward(Value);
+	}
+}
+
+void ATankPlayerController::Fire()
+{
+	if (TankPawn)
+	{
+		TankPawn->Fire();
 	}
 }

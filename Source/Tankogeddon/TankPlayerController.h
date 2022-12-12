@@ -29,5 +29,7 @@ protected:
 	void MoveForward(float Value);
 	void RotationForward(float Value);
 
+	void Fire();
+
 	FVector MousePos;
 };

@@ -7,6 +7,7 @@
 #include "TankPawn.generated.h"
 
 class UStaticMeshComponent;
+class ACannon;
 
 UCLASS()
 class TANKOGEDDON_API ATankPawn : public APawn
@@ -19,7 +20,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void MoveForward(float Value);
+
 	void RotationForward(float Value);
+
+	void Fire();
+
+	void SetupCannon(TSubclassOf<ACannon> newCannonClass);
 
 protected:
 	virtual void BeginPlay() override;
@@ -39,6 +45,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	class UCameraComponent* Camera;
 
+	UPROPERTY()
+	ACannon* Cannon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cannon")
+	TSubclassOf<ACannon> CannonClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cannon")
+	class UArrowComponent* CannonSetupPoint;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
 	float MoveSpeed = 100.0f;
 
@@ -46,7 +61,7 @@ protected:
 	float RotationSpeed = 100.0f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
-	float TurretRotationInterpolationKey = 0.1f;
+	float TurretRotationInterpolationKey = 0.125f;
 
 	UPROPERTY()
 	class ATankPlayerController* TankController;
