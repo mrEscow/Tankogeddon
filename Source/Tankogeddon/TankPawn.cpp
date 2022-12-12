@@ -34,16 +34,30 @@ void ATankPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FVector currentLocation = GetActorLocation();
-	FVector forwardVector = GetActorForwardVector();
-	FVector movePosition = currentLocation + forwardVector * MoveSpeed * targetForwardAxisValue * DeltaTime;
-	SetActorLocation(movePosition, true);
+	SetLocationAndRotation(DeltaTime);
 }
 
 void ATankPawn::MoveForward(float Value)
 {
 	targetForwardAxisValue = Value;
+}
 
+void ATankPawn::RotationForward(float Value)
+{
+	targetRotationAxisValue = Value;
+}
+
+void ATankPawn::SetLocationAndRotation(float DeltaTime)
+{
+	FVector currentLocation = GetActorLocation();
+	FVector forwardVector = GetActorForwardVector();
+	FVector NewPosition = currentLocation + forwardVector * MoveSpeed * targetForwardAxisValue * DeltaTime;
+
+	FRotator Rotation = GetActorRotation();
+	Rotation.Yaw += targetRotationAxisValue * RotationSpeed * DeltaTime;
+	FRotator NewRotation = FRotator(Rotation);
+
+	SetActorLocationAndRotation(NewPosition, NewRotation, false, 0, ETeleportType::None);
 }
 
 
