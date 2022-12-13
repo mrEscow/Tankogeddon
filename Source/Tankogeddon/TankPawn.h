@@ -25,6 +25,10 @@ public:
 
 	void Fire();
 
+	void FireSpecial();
+
+	void ReloadAmmo();
+
 	void SetupCannon(TSubclassOf<ACannon> newCannonClass);
 
 protected:

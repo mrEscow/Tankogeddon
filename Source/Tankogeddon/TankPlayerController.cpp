@@ -13,6 +13,9 @@ void ATankPlayerController::SetupInputComponent()
 	InputComponent->BindAxis("RotationTank", this, &ATankPlayerController::RotationTank);
 
 	InputComponent->BindAction("Fire",EInputEvent::IE_Pressed ,this, &ATankPlayerController::Fire);
+	InputComponent->BindAction("FireSpecial", EInputEvent::IE_Pressed, this, &ATankPlayerController::FireSpecial);
+
+	InputComponent->BindAction("ReloadAmmo", EInputEvent::IE_Pressed, this, &ATankPlayerController::ReloadAmmo);
 }
 
 void ATankPlayerController::Tick(float DeltaSeconds)
@@ -58,5 +61,21 @@ void ATankPlayerController::Fire()
 	if (TankPawn)
 	{
 		TankPawn->Fire();
+	}
+}
+
+void ATankPlayerController::FireSpecial()
+{
+	if (TankPawn)
+	{
+		TankPawn->FireSpecial();
+	}
+}
+
+void  ATankPlayerController::ReloadAmmo()
+{
+	if (TankPawn)
+	{
+		TankPawn->ReloadAmmo();
 	}
 }

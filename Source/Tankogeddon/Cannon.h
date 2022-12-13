@@ -19,7 +19,13 @@ public:
 
 	void Fire();
 
+	void FireSpecial();
+
+	void ReloadAmmo();
+
 	bool IsReadyToFire();
+
+	void AutoShyting();
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -27,6 +33,7 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UArrowComponent* ProjectileSpawnPoint; // точка, из которой будет производиться стрельба
+
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 	float FireRate = 1; // частота стрельбы, сколько выстрелов в секунду делает наша пушка.
@@ -40,9 +47,28 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 	ECannonType Type = ECannonType::FireProjectile; //тип пушки.
 
-	FTimerHandle ReloadTimerHandle; // структура, использующаяся для работы с таймерами.
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
+	int Ammo = 10; // количество снарядов
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Auto Shuting")
+	int AutoShutCount = 3; // количество снарядов
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Auto Shuting")
+	float AutoShutTme = 0.1f; // количество снарядов
+
+
+	FTimerHandle ReloadCannonTimerHandle; // структура, использующаяся для работы с таймерами перезарядки оружия.
+
+	FTimerHandle ReloadAmmoTimerHandle; // структура, использующаяся для работы с таймером перезарядки патрон.
+
+	FTimerHandle AutomaticShootingTimerHandle; // структура, использующаяся для работы с таймером для автоматической стрельбы
+
 
 	bool ReadyToFire = false; // признак готовности пушки к стрельбе
+
+	bool isReloadWeapon = false; // идет ли перезарядка
+
+	bool isAutoShyting = false; // идет ли перезарядка
 
 	virtual void BeginPlay() override;
 

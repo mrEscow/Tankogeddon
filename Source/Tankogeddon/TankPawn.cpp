@@ -69,6 +69,22 @@ void ATankPawn::Fire()
 	}
 }
 
+void ATankPawn::FireSpecial()
+{
+	if (Cannon)
+	{
+		Cannon->FireSpecial();
+	}
+}
+
+void  ATankPawn::ReloadAmmo()
+{
+	if (Cannon)
+	{
+		Cannon->ReloadAmmo();
+	}
+}
+
 void ATankPawn::SetupCannon(TSubclassOf<ACannon> newCannonClass)
 {
 	if (!newCannonClass)
