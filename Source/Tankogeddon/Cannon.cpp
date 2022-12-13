@@ -5,6 +5,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "TimerManager.h"
 #include "Engine/Engine.h"
+#include "Projectile.h"
 
 ACannon::ACannon()
 {
@@ -38,10 +39,10 @@ void ACannon::Fire()
 
 			AutoShyting();
 		}
-
 		break;
 
 	case ECannonType::FireTrace:
+
 		GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, "Fire - trace");
 		break;
 
@@ -71,6 +72,9 @@ void ACannon::AutoShyting()
 		// выстрел
 		const FString DebugMessage = FString::Printf(TEXT("AUTO FIRE:\nAutoShutCount:  %d\nAmmo:   %d   count!"), AutoShutCount, Ammo);
 		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Orange, DebugMessage);
+
+		FireProjectileShut();
+
 		AutoShutCount--;
 
 		// повтор
@@ -115,16 +119,17 @@ void ACannon::FireSpecial()
 	case ECannonType::FireProjectile:
 
 		Ammo--;
-
 		GEngine->AddOnScreenDebugMessage(Key , TimeToDisplay, DisplayColor , DebugMessage);
-
+		FireProjectileShut();
 		break;
 
 	case ECannonType::FireTrace:
+
 		GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, "Fire - trace");
 		break;
 
 	default:
+
 		return;
 		break;
 	}
@@ -135,6 +140,18 @@ void ACannon::FireSpecial()
 
 	// управление таймером через глобальный объект TimerManager
 	GetWorld()->GetTimerManager().SetTimer(ReloadCannonTimerHandle, this, &ACannon::Reload, 1 / FireRate, false);
+}
+
+void ACannon::FireProjectileShut()
+{
+	AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass,
+		ProjectileSpawnPoint->GetComponentLocation(),
+		ProjectileSpawnPoint->GetComponentRotation());
+
+	if (projectile)
+	{
+		projectile->Start();
+	}
 }
 
 void ACannon::ReloadAmmo()

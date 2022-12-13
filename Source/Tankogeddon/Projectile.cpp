@@ -29,8 +29,12 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 									 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 									 bool bFromSweep, const FHitResult& SweepResult )
 {
-	UE_LOG(LogTemp, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
-
+	if (OtherActor)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
+		OtherActor->Destroy();
+		Destroy();
+	}
 }
 
 void AProjectile::Move()
