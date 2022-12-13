@@ -23,13 +23,9 @@ void AProjectile::Start()
 
 }
 
-void AProjectile::OnMeshOverlapBegin(
-	UPrimitiveComponent* OverlappedComp, 
-	AActor* OtherActor,
-	UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex,
-	bool bFromSweep, 
-	const FHitResult& SweepResult )
+void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+									 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
+									 bool bFromSweep, const FHitResult& SweepResult )
 {
 	UE_LOG(LogTemp, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
 

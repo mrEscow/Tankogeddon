@@ -10,27 +10,27 @@ UCLASS()
 class TANKOGEDDON_API AProjectile : public AActor
 {
 	GENERATED_BODY()
-	
-protected:
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UStaticMeshComponent* Mesh; // 3D-модель снаряда
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
-	float MoveSpeed = 100; // скорость полёта снаряда
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
-	float MoveRate = 0.005f; // — частота обновления позиции снаряда в секундах
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
-	float Damage = 1; // повреждения, которые будет наносить снаряд при попадании.
-
-
-	FTimerHandle MovementTimerHandle;
 
 public:
 	AProjectile();
 
 	void Start();
+	
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	class UStaticMeshComponent* Mesh; // 3D-модель снаряда
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement|Speed")
+	float MoveSpeed = 100.0f; // скорость полёта снаряда
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement|Speed")
+	float MoveRate = 0.005f; // — частота обновления позиции снаряда в секундах
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
+	float Damage = 1; // повреждения, которые будет наносить снаряд при попадании.
+
+
+	FTimerHandle MovementTimerHandle;
 
 protected:
 	UFUNCTION() // обнаружение столкновения с другими объектами.
