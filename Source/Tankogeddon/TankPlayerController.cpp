@@ -9,8 +9,8 @@ void ATankPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	InputComponent->BindAxis("MoveForward", this, &ATankPlayerController::MoveForward);
-	InputComponent->BindAxis("RotationForward", this, &ATankPlayerController::RotationForward);
+	InputComponent->BindAxis("MoveTank", this, &ATankPlayerController::MoveTank);
+	InputComponent->BindAxis("RotationTank", this, &ATankPlayerController::RotationTank);
 
 	InputComponent->BindAction("Fire",EInputEvent::IE_Pressed ,this, &ATankPlayerController::Fire);
 }
@@ -26,8 +26,6 @@ void ATankPlayerController::Tick(float DeltaSeconds)
 	FVector dir = MousePos - PawnPosition;
 	dir.Normalize();
 	MousePos = PawnPosition + dir * 1000;
-
-	DrawDebugLine(GetWorld(), PawnPosition, MousePos, FColor::Green, false, 0.1f, 0, 5);
 }
 
 void ATankPlayerController::BeginPlay()
@@ -39,19 +37,19 @@ void ATankPlayerController::BeginPlay()
 	TankPawn = Cast<ATankPawn>(GetPawn());
 }
 
-void ATankPlayerController::MoveForward(float Value)
+void ATankPlayerController::MoveTank(float Value)
 {
 	if (TankPawn)
 	{
-		TankPawn->MoveForward(Value);
+		TankPawn->MoveBase(Value);
 	}
 }
 
-void ATankPlayerController::RotationForward(float Value)
+void ATankPlayerController::RotationTank(float Value)
 {
 	if (TankPawn)
 	{
-		TankPawn->RotationForward(Value);
+		TankPawn->RotationBase(Value);
 	}
 }
 

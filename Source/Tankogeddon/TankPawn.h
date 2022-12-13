@@ -19,9 +19,9 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	void MoveForward(float Value);
+	void MoveBase(float Value);
 
-	void RotationForward(float Value);
+	void RotationBase(float Value);
 
 	void Fire();
 
@@ -30,21 +30,24 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	UStaticMeshComponent* BodyMesh;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	UStaticMeshComponent* TurretMesh;
-
+	// body
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	class UBoxComponent* BoxCollision;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	class USpringArmComponent* SpringArm;
+	UStaticMeshComponent* BaseMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UStaticMeshComponent* TurretMesh;
+
+	// camera
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	class USpringArmComponent* SpringArm;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	class UCameraComponent* Camera;
 
+	// gun
 	UPROPERTY()
 	ACannon* Cannon;
 
@@ -54,24 +57,32 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cannon")
 	class UArrowComponent* CannonSetupPoint;
 
+	// props
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
 	float MoveSpeed = 100.0f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
 	float RotationSpeed = 100.0f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
+	// interpolation
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "InterpolationKey")
+	float BaseMoveInterpolationKey = 0.125f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "InterpolationKey")
+	float BaseRotationInterpolationKey = 0.125f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "InterpolationKey")
 	float TurretRotationInterpolationKey = 0.125f;
 
+	// controller
 	UPROPERTY()
 	class ATankPlayerController* TankController;
 
-	float targetForwardAxisValue = 0.0f;
-	float targetRotationAxisValue = 0.0f;
-	float turretRotationAxisValue = 0.0f;
+	float moveBaseAxisValue = 0.0f;
+	float rotationBaseAxisValue = 0.0f;
 
 private:
-	void SetLocationAndRotation(float DeltaTime);
+	void MoveAndRotationBase(float DeltaTime);
 
 	void RotationTurrel(float DeltaTime);
 };

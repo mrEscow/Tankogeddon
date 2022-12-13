@@ -26,10 +26,12 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	void MoveForward(float Value);
-	void RotationForward(float Value);
+	void MoveTank(float Value);
+
+	void RotationTank(float Value);
 
 	void Fire();
+
 
 	FVector MousePos;
 };

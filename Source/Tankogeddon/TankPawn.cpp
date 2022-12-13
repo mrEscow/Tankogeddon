@@ -12,6 +12,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "DrawDebugHelpers.h"
 
 
 ATankPawn::ATankPawn()
@@ -21,11 +22,11 @@ ATankPawn::ATankPawn()
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("RootComponent"));
 	RootComponent = BoxCollision;
 
-	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BodyMesh"));
-	BodyMesh->SetupAttachment(BoxCollision);
+	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
+	BaseMesh->SetupAttachment(BoxCollision);
 
 	TurretMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretMesh"));
-	TurretMesh->SetupAttachment(BodyMesh);
+	TurretMesh->SetupAttachment(BaseMesh);
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(BoxCollision);
@@ -45,19 +46,19 @@ void ATankPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	SetLocationAndRotation(DeltaTime);
+	MoveAndRotationBase(DeltaTime);
 
 	RotationTurrel(DeltaTime);
 }
 
-void ATankPawn::MoveForward(float Value)
+void ATankPawn::MoveBase(float Value)
 {
-	targetForwardAxisValue = Value;
+	moveBaseAxisValue = Value;
 }
 
-void ATankPawn::RotationForward(float Value)
+void ATankPawn::RotationBase(float Value)
 {
-	targetRotationAxisValue = Value;
+	rotationBaseAxisValue = Value;
 }
 
 void ATankPawn::Fire()
@@ -98,15 +99,23 @@ void ATankPawn::BeginPlay()
 	SetupCannon(CannonClass);
 }
 
-void ATankPawn::SetLocationAndRotation(float DeltaTime)
+void ATankPawn::MoveAndRotationBase(float DeltaTime)
 {
-	FVector currentLocation = GetActorLocation();
-	FVector forwardVector = GetActorForwardVector();
-	FVector NewPosition = currentLocation + forwardVector * MoveSpeed * targetForwardAxisValue * DeltaTime;
+	FVector CurrentLocation = GetActorLocation();
+	FVector ForwardVector = GetActorForwardVector();
+	FVector ChangePosition = CurrentLocation + ForwardVector * MoveSpeed * moveBaseAxisValue * DeltaTime;
+	FVector NewPosition = FMath::Lerp(ChangePosition, CurrentLocation, BaseMoveInterpolationKey);
 
-	FRotator Rotation = GetActorRotation();
-	Rotation.Yaw += targetRotationAxisValue * RotationSpeed * DeltaTime;
-	FRotator NewRotation = FRotator(Rotation);
+	//UE_LOG(LogTemp, Warning, TEXT("MoveBase"));
+	//UE_LOG(LogTemp, Warning, TEXT("ChangePosition is: %s"), *ChangePosition.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("NewPosition    is: %s"), *NewPosition.ToString());
+	//FVector DeltaVector = ChangePosition - NewPosition;
+	//UE_LOG(LogTemp, Warning, TEXT("DeltaVector    is: %s"), *DeltaVector.ToString());
+
+	FRotator CurrentRotation = GetActorRotation();
+	FRotator ChangeRotation = CurrentRotation;
+	ChangeRotation.Yaw += rotationBaseAxisValue * RotationSpeed * DeltaTime;
+	FRotator NewRotation = FMath::Lerp(ChangeRotation, CurrentRotation, BaseRotationInterpolationKey);
 
 	SetActorLocationAndRotation(NewPosition, NewRotation, false, 0, ETeleportType::None);
 }
@@ -116,10 +125,15 @@ void ATankPawn::RotationTurrel(float DeltaTime)
 	if (TankController)
 	{
 		FVector mousePos = TankController->GetMousePosition();
-		FRotator targetRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), mousePos);
+		FRotator currentRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), mousePos);
 		FRotator turretRotation = TurretMesh->GetComponentRotation();
-		targetRotation.Pitch = turretRotation.Pitch;
-		targetRotation.Roll = turretRotation.Roll;
-		TurretMesh->SetWorldRotation(FMath::Lerp(turretRotation, targetRotation, TurretRotationInterpolationKey));
+		currentRotation.Pitch = turretRotation.Pitch;
+		currentRotation.Roll = turretRotation.Roll;
+
+		FRotator NewRotation = FMath::Lerp(turretRotation, currentRotation, TurretRotationInterpolationKey);
+		TurretMesh->SetWorldRotation(NewRotation);
+
+		FVector turretPos = TurretMesh->GetComponentLocation();
+		DrawDebugLine(GetWorld(), turretPos, mousePos, FColor::Green, false, 0.1f, 0, 5);
 	}
 }
