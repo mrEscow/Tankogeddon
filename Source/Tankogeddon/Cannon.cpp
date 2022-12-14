@@ -6,6 +6,7 @@
 #include "TimerManager.h"
 #include "Engine/Engine.h"
 #include "Projectile.h"
+#include "DrawDebugHelpers.h"
 
 ACannon::ACannon()
 {
@@ -161,6 +162,7 @@ void ACannon::FireTraceShut()
 	FHitResult hitResult;
 
 	FCollisionQueryParams traceParams = FCollisionQueryParams(FName(TEXT("FireTrace")), true, this);
+	traceParams.AddIgnoredActor(this);
 	traceParams.bTraceComplex = true;
 	traceParams.bReturnPhysicalMaterial = false;
 
@@ -173,12 +175,14 @@ void ACannon::FireTraceShut()
 
 		if (hitResult.GetActor())
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Actor %s. "),  *hitResult.GetActor()->GetName());
+
 			hitResult.GetActor()->Destroy();
 		}
 	}
 	else
 	{
-		DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 0.5f, 0, 5);
+		DrawDebugLine(GetWorld(), start, end, FColor::Yellow, false, 0.5f, 0, 5);
 	}
 }
 

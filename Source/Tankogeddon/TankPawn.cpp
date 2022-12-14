@@ -150,6 +150,6 @@ void ATankPawn::RotationTurrel(float DeltaTime)
 		TurretMesh->SetWorldRotation(NewRotation);
 
 		FVector turretPos = TurretMesh->GetComponentLocation();
-		DrawDebugLine(GetWorld(), turretPos, mousePos, FColor::Green, false, 0.1f, 0, 5);
+		//DrawDebugLine(GetWorld(), turretPos, mousePos, FColor::Green, false, 0.1f, 0, 5);
 	}
 }
