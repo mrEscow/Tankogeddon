@@ -44,6 +44,7 @@ void ACannon::Fire()
 	case ECannonType::FireTrace:
 
 		GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, "Fire - trace");
+		FireTraceShut();
 		break;
 
 	default:
@@ -126,6 +127,7 @@ void ACannon::FireSpecial()
 	case ECannonType::FireTrace:
 
 		GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, "Fire - trace");
+		FireTraceShut();
 		break;
 
 	default:
@@ -151,6 +153,32 @@ void ACannon::FireProjectileShut()
 	if (projectile)
 	{
 		projectile->Start();
+	}
+}
+
+void ACannon::FireTraceShut()
+{
+	FHitResult hitResult;
+
+	FCollisionQueryParams traceParams = FCollisionQueryParams(FName(TEXT("FireTrace")), true, this);
+	traceParams.bTraceComplex = true;
+	traceParams.bReturnPhysicalMaterial = false;
+
+	FVector start = ProjectileSpawnPoint->GetComponentLocation();
+	FVector end = ProjectileSpawnPoint->GetForwardVector() * FireRange + start;
+
+	if (GetWorld()->LineTraceSingleByChannel(hitResult, start, end, ECollisionChannel::ECC_Visibility, traceParams))
+	{
+		DrawDebugLine(GetWorld(), start, hitResult.Location, FColor::Red, false, 0.5f, 0, 5);
+
+		if (hitResult.GetActor())
+		{
+			hitResult.GetActor()->Destroy();
+		}
+	}
+	else
+	{
+		DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 0.5f, 0, 5);
 	}
 }
 

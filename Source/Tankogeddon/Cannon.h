@@ -29,6 +29,8 @@ public:
 
 	void FireProjectileShut();
 
+	void FireTraceShut();
+
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UStaticMeshComponent * Mesh; // модель пушки
