@@ -17,6 +17,8 @@ AProjectile::AProjectile()
 	// Подписка на событие начала пересечения с другим объектом,
 	Mesh->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnMeshOverlapBegin);
 
+	// Установка канала колизии
+	Mesh->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
 }
 
 void AProjectile::Start()
