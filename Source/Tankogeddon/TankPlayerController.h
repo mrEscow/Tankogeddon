@@ -27,13 +27,13 @@ protected:
 	virtual void BeginPlay() override;
 
 	void MoveTank(float Value);
-
 	void RotationTank(float Value);
 
-	void Fire();
+	void RocketFire();
+	void MashinGunFire();
+	void LaserFire();
 
-	void FireSpecial();
-
+	void ChangeRocketType();
 	void ReloadAmmo();
 
 	FVector MousePos;

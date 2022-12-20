@@ -20,16 +20,17 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void MoveBase(float Value);
-
 	void RotationBase(float Value);
 
-	void Fire();
+	void RocketFire();
+	void MashinGunFire();
+	void LaserFire();
 
-	void FireSpecial();
-
+	void ChangeRocketType();
 	void ReloadAmmo();
 
-	void SetupCannon(TSubclassOf<ACannon> newCannonClass);
+	void SetupCannon(TSubclassOf<ACannon> newRocketCannonClass, int32 ammoCount = 0);
+	void AddAmmo(int32 ammoCount);
 
 protected:
 	virtual void BeginPlay() override;
@@ -51,9 +52,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	class UCameraComponent* Camera;
 
-	// gun
+	// guns
 	UPROPERTY()
-	ACannon* Cannon;
+	ACannon* RocketCannon;
+
+	UPROPERTY()
+	ACannon* MachinGunCannon;
+
+	UPROPERTY()
+	ACannon* LaserCannon;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cannon")
 	TSubclassOf<ACannon> CannonClass;
@@ -62,20 +70,20 @@ protected:
 	class UArrowComponent* CannonSetupPoint;
 
 	// props
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float MoveSpeed = 100.0f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float RotationSpeed = 100.0f;
 
 	// interpolation
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "InterpolationKey")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InterpolationKey")
 	float BaseMoveInterpolationKey = 0.125f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "InterpolationKey")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InterpolationKey")
 	float BaseRotationInterpolationKey = 0.125f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "InterpolationKey")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InterpolationKey")
 	float TurretRotationInterpolationKey = 0.125f;
 
 	// controller

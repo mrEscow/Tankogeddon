@@ -12,9 +12,11 @@ void ATankPlayerController::SetupInputComponent()
 	InputComponent->BindAxis("MoveTank", this, &ATankPlayerController::MoveTank);
 	InputComponent->BindAxis("RotationTank", this, &ATankPlayerController::RotationTank);
 
-	InputComponent->BindAction("Fire",EInputEvent::IE_Pressed ,this, &ATankPlayerController::Fire);
-	InputComponent->BindAction("FireSpecial", EInputEvent::IE_Pressed, this, &ATankPlayerController::FireSpecial);
+	InputComponent->BindAction("RocketFire",EInputEvent::IE_Pressed ,this, &ATankPlayerController::RocketFire);
+	InputComponent->BindAction("MashinGunFire", EInputEvent::IE_Pressed, this, &ATankPlayerController::MashinGunFire);
+	InputComponent->BindAction("LaserFire", EInputEvent::IE_Pressed, this, &ATankPlayerController::LaserFire);
 
+	InputComponent->BindAction("ChangeRocketType", EInputEvent::IE_Pressed, this, &ATankPlayerController::ChangeRocketType);
 	InputComponent->BindAction("ReloadAmmo", EInputEvent::IE_Pressed, this, &ATankPlayerController::ReloadAmmo);
 }
 
@@ -40,6 +42,7 @@ void ATankPlayerController::BeginPlay()
 	TankPawn = Cast<ATankPawn>(GetPawn());
 }
 
+// move
 void ATankPlayerController::MoveTank(float Value)
 {
 	if (TankPawn)
@@ -56,19 +59,37 @@ void ATankPlayerController::RotationTank(float Value)
 	}
 }
 
-void ATankPlayerController::Fire()
+// fire
+void ATankPlayerController::RocketFire()
 {
 	if (TankPawn)
 	{
-		TankPawn->Fire();
+		TankPawn->RocketFire();
 	}
 }
 
-void ATankPlayerController::FireSpecial()
+void ATankPlayerController::MashinGunFire()
 {
 	if (TankPawn)
 	{
-		TankPawn->FireSpecial();
+		TankPawn->MashinGunFire();
+	}
+}
+
+void ATankPlayerController::LaserFire()
+{
+	if (TankPawn)
+	{
+		TankPawn->LaserFire();
+	}
+}
+
+// options
+void  ATankPlayerController::ChangeRocketType()
+{
+	if (TankPawn)
+	{
+		TankPawn->ChangeRocketType();
 	}
 }
 

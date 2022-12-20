@@ -43,6 +43,7 @@ void AAmmoBox::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 	ATankPawn* playerPawn = Cast<ATankPawn>(OtherActor);
 	if (OtherActor)
 	{
+		//switch ()
 		playerPawn->SetupCannon(CannonClass);
 		Destroy();
 	}

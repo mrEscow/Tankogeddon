@@ -14,11 +14,12 @@ AProjectile::AProjectile()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
 
+	// Установка канала колизии
+	Mesh->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
+
 	// Подписка на событие начала пересечения с другим объектом,
 	Mesh->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnMeshOverlapBegin);
 
-	// Установка канала колизии
-	Mesh->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
 }
 
 void AProjectile::Start()
@@ -30,6 +31,14 @@ void AProjectile::Start()
 void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 									 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 									 bool bFromSweep, const FHitResult& SweepResult )
+{
+	UE_LOG(LogTemp, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
+
+	CollisionWith(OtherActor);
+	
+}
+
+void AProjectile::CollisionWith(AActor* OtherActor)
 {
 	if (OtherActor)
 	{

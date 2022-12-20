@@ -20,7 +20,13 @@ protected:
 	UStaticMeshComponent* Mesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo")
-	TSubclassOf<ACannon> CannonClass;
+	TSubclassOf<ACannon> CannonClass; // тип пушки
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ammo")
+	TSubclassOf<class AProjectile> ProjectileClass; // снаряд
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo")
+	int32 Ammo = 0; // количество снарядов
 
 protected:
 	UFUNCTION()

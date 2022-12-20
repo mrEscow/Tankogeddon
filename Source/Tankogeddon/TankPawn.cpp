@@ -61,49 +61,73 @@ void ATankPawn::RotationBase(float Value)
 	rotationBaseAxisValue = Value;
 }
 
-void ATankPawn::Fire()
+void ATankPawn::RocketFire()
 {
-	if (Cannon)
+	if (RocketCannon)
 	{
-		Cannon->Fire();
+		RocketCannon->Fire();
 	}
 }
 
-void ATankPawn::FireSpecial()
+void ATankPawn::MashinGunFire()
 {
-	if (Cannon)
+	if (MachinGunCannon)
 	{
-		Cannon->FireSpecial();
+		MachinGunCannon->Fire();
 	}
+}
+
+void ATankPawn::LaserFire()
+{
+	if (LaserCannon)
+	{
+		LaserCannon->Fire();
+	}
+}
+
+void ATankPawn::ChangeRocketType()
+{
+
 }
 
 void  ATankPawn::ReloadAmmo()
 {
-	if (Cannon)
+	if (RocketCannon)
 	{
-		Cannon->ReloadAmmo();
+		RocketCannon->ReloadAmmo();
 	}
 }
 
-void ATankPawn::SetupCannon(TSubclassOf<ACannon> newCannonClass)
+void ATankPawn::SetupCannon(TSubclassOf<ACannon> newRocketCannonClass, int32 ammoCount)
 {
-	if (!newCannonClass)
+	if (!newRocketCannonClass)
 	{
 		return;
 	}
 
-	if (Cannon)
+
+	if (RocketCannon)
 	{
-		Cannon->Destroy();
+		RocketCannon->Destroy();
 	}
 
 	FActorSpawnParameters spawnParams;
 	spawnParams.Instigator = this;
 	spawnParams.Owner = this;
 
-	Cannon = GetWorld()->SpawnActor<ACannon>(newCannonClass, spawnParams);
+	RocketCannon = GetWorld()->SpawnActor<ACannon>(newRocketCannonClass, spawnParams);
 
-	Cannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	RocketCannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+
+	AddAmmo(ammoCount);
+}
+
+void ATankPawn::AddAmmo(int32 AmmoCount)
+{
+	if (RocketCannon)
+	{
+		RocketCannon->AddAmmo(AmmoCount);
+	}
 }
 
 void ATankPawn::BeginPlay()
@@ -121,12 +145,6 @@ void ATankPawn::MoveAndRotationBase(float DeltaTime)
 	FVector ForwardVector = GetActorForwardVector();
 	FVector ChangePosition = CurrentLocation + ForwardVector * MoveSpeed * moveBaseAxisValue * DeltaTime;
 	FVector NewPosition = FMath::Lerp(ChangePosition, CurrentLocation, BaseMoveInterpolationKey);
-
-	//UE_LOG(LogTemp, Warning, TEXT("MoveBase"));
-	//UE_LOG(LogTemp, Warning, TEXT("ChangePosition is: %s"), *ChangePosition.ToString());
-	//UE_LOG(LogTemp, Warning, TEXT("NewPosition    is: %s"), *NewPosition.ToString());
-	//FVector DeltaVector = ChangePosition - NewPosition;
-	//UE_LOG(LogTemp, Warning, TEXT("DeltaVector    is: %s"), *DeltaVector.ToString());
 
 	FRotator CurrentRotation = GetActorRotation();
 	FRotator ChangeRotation = CurrentRotation;

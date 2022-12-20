@@ -8,8 +8,16 @@
 
 UENUM(BlueprintType)
 enum class ECannonType : uint8 {
-	FireProjectile = 0 UMETA(DisplayName = "Use projectile"),
-	FireTrace = 1 UMETA(DisplayName = "Use trace")
+	FireRocket = 0 UMETA(DisplayName = "Use rocket"),
+	FireLaser = 1 UMETA(DisplayName = "Use laser"),
+	FireMachineGun = 2 UMETA(DisplayName = "Use MachineGun")
+};
+
+UENUM(BlueprintType)
+enum class ERocketType : uint8 {
+	BigRocket = 0 UMETA(DisplayName = "Use BigRocket"),
+	MidlRocket = 1 UMETA(DisplayName = "Use MidlRocket"),
+	SmallRocket = 2 UMETA(DisplayName = "Use SmallRocket")
 };
 
 UCLASS()

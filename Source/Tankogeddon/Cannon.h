@@ -19,17 +19,19 @@ public:
 
 	void Fire();
 
-	void FireSpecial();
+	void AddAmmo(int32 AmmoCount);
 
 	void ReloadAmmo();
 
-	bool IsReadyToFire();
-
 	void AutoShyting();
 
-	void FireProjectileShut();
+private:
 
+	bool IsReadyToFire();
+
+	void FireProjectileShut();
 	void FireTraceShut();
+	void FireMashinGun();
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -45,25 +47,33 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 	float FireRange = 1000; // дистанция стрельбы
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-	float FireDamage = 1; // количество наносимых повреждений.
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
+	//float FireDamage = 1; // количество наносимых повреждений.
 
+	// тип и класс снаряда
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-	ECannonType Type = ECannonType::FireProjectile; //тип пушки.
+	ECannonType Type = ECannonType::FireRocket; //тип пушки.
 
-	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 	TSubclassOf<class AProjectile> ProjectileClass; // снаряд
 
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-	int Ammo = 10; // количество снарядов
+	// Ammo
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params/Ammo")
+	int32 MaxCurrentAmmo = 5; // количество снарядов
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Auto Shuting")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params/Ammo")
+	int32 CurrentCountAmmo = 0; // количество снарядов
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params/Ammo")
+	int32 CountAmmo = 0; // общее количество снарядов
+
+	// auto shuting
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Auto Shuting")
 	int AutoShutCount = 3; // количество снарядов
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Auto Shuting")
-	float AutoShutTme = 0.1f; // количество снарядов
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Auto Shuting")
+	float AutoShutTme = 0.02f; // время повторного выстрела
 
 
 	FTimerHandle ReloadCannonTimerHandle; // структура, использующаяся для работы с таймерами перезарядки оружия.
