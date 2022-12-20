@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Cannon.h"
+#include "Projectile.h"
 #include "Components/ArrowComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "TimerManager.h"
@@ -20,7 +21,43 @@ ACannon::ACannon()
 
 	ProjectileSpawnPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("Spawnpoint"));
 	ProjectileSpawnPoint->SetupAttachment(Mesh);
+
+	
 }
+
+//ACannon::ACannon(TSubclassOf<AProjectile> newProjectileClass)
+//{
+//	ACannon();
+//
+//	if(newProjectileClass)
+//		setupProjectile(newProjectileClass);
+//}
+
+//void ACannon::setupProjectile(TSubclassOf<AProjectile> newProjectileClass)
+//{
+//	if (!newProjectileClass)
+//	{
+//		return;
+//	}
+//
+//	ProjectileClass = newProjectileClass;
+//
+//	//if (Projectile)
+//	//{
+//	//	Projectile->Destroy();
+//
+//	//}
+//
+//	//FActorSpawnParameters spawnParams;
+//	//spawnParams.Instigator = this;
+//	//spawnParams.Owner = this;
+//
+//	//Projectile = GetWorld()->SpawnActor<AProjectile>(newProjectileClass, spawnParams);
+//
+//	//ProjectileClass->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+//}
+
+
 
 void ACannon::Fire()
 {
@@ -37,7 +74,13 @@ void ACannon::Fire()
 		// AutomaticShooting
 		if (!isAutoShyting)
 		{
-			//Ammo--;
+			if (CurrentCountAmmo == 0)
+			{
+				ReloadAmmo();
+				return;
+			}
+
+			CurrentCountAmmo--;
 
 			AutoShyting();
 		}
@@ -114,13 +157,13 @@ void ACannon::AutoShyting()
 
 void ACannon::FireProjectileShut()
 {
-	AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass,
+	AProjectile* NewProjectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass,
 		ProjectileSpawnPoint->GetComponentLocation(),
 		ProjectileSpawnPoint->GetComponentRotation());
 
-	if (projectile)
+	if (NewProjectile)
 	{
-		projectile->Start();
+		NewProjectile->Start();
 	}
 }
 

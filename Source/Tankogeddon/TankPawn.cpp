@@ -3,6 +3,8 @@
 #include "TankPawn.h"
 
 #include "TankPlayerController.h"
+
+//#include "Projectile.h"
 #include "Cannon.h"
 
 #include "Components/StaticMeshComponent.h"
@@ -98,7 +100,7 @@ void  ATankPawn::ReloadAmmo()
 	}
 }
 
-void ATankPawn::SetupCannon(TSubclassOf<ACannon> newRocketCannonClass, int32 ammoCount)
+void ATankPawn::SetupCannon(TSubclassOf<ACannon> newRocketCannonClass, /*TSubclassOf< AProjectile> newProjectileClass,*/  int32 ammoCount)
 {
 	if (!newRocketCannonClass)
 	{
@@ -119,7 +121,15 @@ void ATankPawn::SetupCannon(TSubclassOf<ACannon> newRocketCannonClass, int32 amm
 
 	RocketCannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 
-	AddAmmo(ammoCount);
+	//if (ProjectileClass)
+	//{
+	//	RocketCannon->setupProjectile(ProjectileClass);
+	//}
+		
+	if (ammoCount > 0)
+	{
+		AddAmmo(ammoCount);
+	}
 }
 
 void ATankPawn::AddAmmo(int32 AmmoCount)
@@ -127,6 +137,7 @@ void ATankPawn::AddAmmo(int32 AmmoCount)
 	if (RocketCannon)
 	{
 		RocketCannon->AddAmmo(AmmoCount);
+		RocketCannon->ReloadAmmo();
 	}
 }
 
@@ -136,7 +147,7 @@ void ATankPawn::BeginPlay()
 
 	TankController = Cast<ATankPlayerController>(GetController());
 
-	SetupCannon(CannonClass);
+	SetupCannon(CannonClass, 1);
 }
 
 void ATankPawn::MoveAndRotationBase(float DeltaTime)

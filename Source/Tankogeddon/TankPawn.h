@@ -8,6 +8,7 @@
 
 class UStaticMeshComponent;
 class ACannon;
+class AProjectile;
 
 UCLASS()
 class TANKOGEDDON_API ATankPawn : public APawn
@@ -29,7 +30,7 @@ public:
 	void ChangeRocketType();
 	void ReloadAmmo();
 
-	void SetupCannon(TSubclassOf<ACannon> newRocketCannonClass, int32 ammoCount = 0);
+	void SetupCannon(TSubclassOf<ACannon> newRocketCannonClass, /*TSubclassOf< AProjectile> newProjectileClass,*/  int32 ammoCount = 0);
 	void AddAmmo(int32 ammoCount);
 
 protected:

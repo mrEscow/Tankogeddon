@@ -3,6 +3,7 @@
 
 #include "AmmoBox.h"
 #include "TankPawn.h"
+#include "Cannon.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
@@ -29,6 +30,7 @@ void AAmmoBox::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 								  UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, 
 								  bool bFromSweep, const FHitResult& SweepResult)
 {
+
 	// первый способ
 	// 
 	//ATankPawn* playerPawn = Cast<ATankPawn>(GetWorld()->GetFirstPlayerController()->GetPawn());
@@ -38,13 +40,17 @@ void AAmmoBox::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 	//	Destroy();
 	//}
 
+
 	// второй способ
 	//
 	ATankPawn* playerPawn = Cast<ATankPawn>(OtherActor);
 	if (OtherActor)
 	{
-		//switch ()
-		playerPawn->SetupCannon(CannonClass);
+		//CannonClass.GetDefaultObject()->setupProjectile(ProjectileClass);
+
+		//playerPawn->SetupCannon(CannonClass, ProjectileClass);
+		playerPawn->SetupCannon(CannonClass, Ammo);
+		//playerPawn->AddAmmo(Ammo);
 		Destroy();
 	}
 

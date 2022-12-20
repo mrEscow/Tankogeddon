@@ -17,12 +17,12 @@ class TANKOGEDDON_API ACannon : public AActor
 public:
 	ACannon();
 
+	//ACannon(TSubclassOf<class AProjectile> newProjectileClass);
+	//void setupProjectile(TSubclassOf<class AProjectile> newProjectileClass);
+
 	void Fire();
-
 	void AddAmmo(int32 AmmoCount);
-
 	void ReloadAmmo();
-
 	void AutoShyting();
 
 private:
@@ -52,10 +52,14 @@ protected:
 
 	// тип и класс снаряда
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-	ECannonType Type = ECannonType::FireRocket; //тип пушки.
+	ECannonType Type = ECannonType::FireRocket; //тип пушки
+
+	// снаряд
+	UPROPERTY()
+	class AProjectile* Projectile; 
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-	TSubclassOf<class AProjectile> ProjectileClass; // снаряд
+	TSubclassOf<class AProjectile> ProjectileClass; 
 
 
 	// Ammo
