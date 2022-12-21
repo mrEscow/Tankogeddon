@@ -2,12 +2,17 @@
 
 #pragma once
 
+#include "ProjectilePool.h"
+
 #include "CoreMinimal.h"
 #include "GameStruct.h"
 #include "GameFramework/Actor.h"
 #include "Cannon.generated.h"
 
+
+
 class UArrowComponent;
+
 
 UCLASS()
 class TANKOGEDDON_API ACannon : public AActor
@@ -17,13 +22,16 @@ class TANKOGEDDON_API ACannon : public AActor
 public:
 	ACannon();
 
-	//ACannon(TSubclassOf<class AProjectile> newProjectileClass);
-	//void setupProjectile(TSubclassOf<class AProjectile> newProjectileClass);
-
 	void Fire();
 	void AddAmmo(int32 AmmoCount);
 	void ReloadAmmo();
 	void AutoShyting();
+
+	int32 GetAllAmmo() { return CurrentCountAmmo + CountAmmo; }
+
+	void SetProjectPool(AProjectilePool* Pool);
+	void SetRocketType(ERocketType NewRocketType);
+	ERocketType GetRocketType();
 
 private:
 
@@ -54,6 +62,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 	ECannonType Type = ECannonType::FireRocket; //тип пушки
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
+	ERocketType RocketType = ERocketType::NonType; //тип ракет
+
+
 	// снаряд
 	UPROPERTY()
 	class AProjectile* Projectile; 
@@ -79,7 +91,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Auto Shuting")
 	float AutoShutTme = 0.02f; // время повторного выстрела
 
-
+private:
 	FTimerHandle ReloadCannonTimerHandle; // структура, использующаяся для работы с таймерами перезарядки оружия.
 
 	FTimerHandle ReloadAmmoTimerHandle; // структура, использующаяся для работы с таймером перезарядки патрон.
@@ -96,4 +108,6 @@ protected:
 	virtual void BeginPlay() override;
 
 	void Reload();
+
+	AProjectilePool* ProjectilePool;
 };

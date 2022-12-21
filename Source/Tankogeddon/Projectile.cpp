@@ -26,6 +26,18 @@ void AProjectile::Start()
 {
 	GetWorld()->GetTimerManager().SetTimer(MovementTimerHandle, this, &AProjectile::Move, MoveRate, true, MoveRate);
 
+	//const FString DebugMessage = FString::Printf(TEXT("TIMELIVE:   %d   secund!"), TimeLive);
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, DebugMessage);
+
+	GetWorld()->GetTimerManager().SetTimer(LiveTimerHandle, this, &AProjectile::ReturnPool, TimeLive, false);
+}
+
+void AProjectile::ReturnPool()
+{
+	GetWorld()->GetTimerManager().ClearTimer(MovementTimerHandle);
+	IsActive = false;
+	SetActorLocation(ProjectileHomePoint->GetComponentLocation());
+	SetActorRotation(ProjectileHomePoint->GetComponentRotation());
 }
 
 void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -44,7 +56,8 @@ void AProjectile::CollisionWith(AActor* OtherActor)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
 		OtherActor->Destroy();
-		Destroy();
+		//Destroy();
+		ReturnPool();
 	}
 }
 

@@ -16,7 +16,7 @@ void ATankPlayerController::SetupInputComponent()
 	InputComponent->BindAction("MashinGunFire", EInputEvent::IE_Pressed, this, &ATankPlayerController::MashinGunFire);
 	InputComponent->BindAction("LaserFire", EInputEvent::IE_Pressed, this, &ATankPlayerController::LaserFire);
 
-	InputComponent->BindAction("ChangeRocketType", EInputEvent::IE_Pressed, this, &ATankPlayerController::ChangeRocketType);
+	InputComponent->BindAction("ChangeMainCannon", EInputEvent::IE_Pressed, this, &ATankPlayerController::ChangeMainCannon);
 	InputComponent->BindAction("ReloadAmmo", EInputEvent::IE_Pressed, this, &ATankPlayerController::ReloadAmmo);
 }
 
@@ -85,11 +85,11 @@ void ATankPlayerController::LaserFire()
 }
 
 // options
-void  ATankPlayerController::ChangeRocketType()
+void  ATankPlayerController::ChangeMainCannon()
 {
 	if (TankPawn)
 	{
-		TankPawn->ChangeRocketType();
+		TankPawn->ChangeMainCannon();
 	}
 }
 

@@ -6,7 +6,6 @@
 #include "Components/StaticMeshComponent.h"
 #include "TimerManager.h"
 #include "Engine/Engine.h"
-#include "Projectile.h"
 #include "DrawDebugHelpers.h"
 
 ACannon::ACannon()
@@ -22,41 +21,7 @@ ACannon::ACannon()
 	ProjectileSpawnPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("Spawnpoint"));
 	ProjectileSpawnPoint->SetupAttachment(Mesh);
 
-	
 }
-
-//ACannon::ACannon(TSubclassOf<AProjectile> newProjectileClass)
-//{
-//	ACannon();
-//
-//	if(newProjectileClass)
-//		setupProjectile(newProjectileClass);
-//}
-
-//void ACannon::setupProjectile(TSubclassOf<AProjectile> newProjectileClass)
-//{
-//	if (!newProjectileClass)
-//	{
-//		return;
-//	}
-//
-//	ProjectileClass = newProjectileClass;
-//
-//	//if (Projectile)
-//	//{
-//	//	Projectile->Destroy();
-//
-//	//}
-//
-//	//FActorSpawnParameters spawnParams;
-//	//spawnParams.Instigator = this;
-//	//spawnParams.Owner = this;
-//
-//	//Projectile = GetWorld()->SpawnActor<AProjectile>(newProjectileClass, spawnParams);
-//
-//	//ProjectileClass->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-//}
-
 
 
 void ACannon::Fire()
@@ -65,7 +30,6 @@ void ACannon::Fire()
 	{
 		return;
 	}
-
 
 	switch (Type)
 	{
@@ -155,14 +119,53 @@ void ACannon::AutoShyting()
 	}
 }
 
+void ACannon::SetProjectPool(AProjectilePool* Pool)
+{
+	if (Pool)
+	{
+		ProjectilePool = Pool;
+	}
+}
+
+void ACannon::SetRocketType(ERocketType NewRocketType)
+{
+	RocketType = NewRocketType;
+}
+
+ERocketType ACannon::GetRocketType()
+{
+	return RocketType;
+}
+
+
+
 void ACannon::FireProjectileShut()
 {
-	AProjectile* NewProjectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass,
-		ProjectileSpawnPoint->GetComponentLocation(),
-		ProjectileSpawnPoint->GetComponentRotation());
+	AProjectile* NewProjectile;
+
+	if (ProjectilePool)
+	{
+		NewProjectile = ProjectilePool->Get(ProjectileClass, RocketType);
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, "DebugMessage: create from pool");
+		if (NewProjectile)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, "DebugMessage: create from pool OK");
+			NewProjectile->SetActorLocation(ProjectileSpawnPoint->GetComponentLocation());
+			NewProjectile->SetActorRotation(ProjectileSpawnPoint->GetComponentRotation());
+		}
+	}
+	else
+	{
+		 NewProjectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass,
+			ProjectileSpawnPoint->GetComponentLocation(),
+			ProjectileSpawnPoint->GetComponentRotation());
+
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, "DebugMessage: create from spawn");
+	}
 
 	if (NewProjectile)
 	{
+		NewProjectile->SetTimeLive(FireRange);
 		NewProjectile->Start();
 	}
 }
@@ -284,5 +287,7 @@ void ACannon::BeginPlay()
 	Super::BeginPlay();
 
 	Reload();
+
+
 }
 

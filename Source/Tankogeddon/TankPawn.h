@@ -2,13 +2,18 @@
 
 #pragma once
 
+#include "ProjectilePool.h"
+
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "TankPawn.generated.h"
 
+
+
 class UStaticMeshComponent;
 class ACannon;
-class AProjectile;
+
+
 
 UCLASS()
 class TANKOGEDDON_API ATankPawn : public APawn
@@ -27,10 +32,10 @@ public:
 	void MashinGunFire();
 	void LaserFire();
 
-	void ChangeRocketType();
+	void ChangeMainCannon();
 	void ReloadAmmo();
 
-	void SetupCannon(TSubclassOf<ACannon> newRocketCannonClass, /*TSubclassOf< AProjectile> newProjectileClass,*/  int32 ammoCount = 0);
+	void SetupCannon(TSubclassOf<ACannon> newRocketCannonClass, ERocketType RocketType = ERocketType::NonType, int32 ammoCount = 0);
 	void AddAmmo(int32 ammoCount);
 
 protected:
@@ -65,10 +70,15 @@ protected:
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cannon")
-	TSubclassOf<ACannon> CannonClass;
+	TSubclassOf<ACannon> CannonClassMain;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cannon")
+	TSubclassOf<ACannon> CannonClassSecond;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cannon")
 	class UArrowComponent* CannonSetupPoint;
+
+	ERocketType SecondRocketType = ERocketType::NonType;
 
 	// props
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
@@ -91,6 +101,13 @@ protected:
 	UPROPERTY()
 	class ATankPlayerController* TankController;
 
+	// ProjectPool
+	UPROPERTY()
+	AProjectilePool* ProjectilePool;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ProjectPool")
+	TSubclassOf<AProjectilePool> AProjectilePoolClass;
+
 	float moveBaseAxisValue = 0.0f;
 	float rotationBaseAxisValue = 0.0f;
 
@@ -98,4 +115,5 @@ private:
 	void MoveAndRotationBase(float DeltaTime);
 
 	void RotationTurrel(float DeltaTime);
+
 };

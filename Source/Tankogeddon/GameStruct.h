@@ -17,7 +17,8 @@ UENUM(BlueprintType)
 enum class ERocketType : uint8 {
 	BigRocket = 0 UMETA(DisplayName = "Use BigRocket"),
 	MidlRocket = 1 UMETA(DisplayName = "Use MidlRocket"),
-	SmallRocket = 2 UMETA(DisplayName = "Use SmallRocket")
+	SmallRocket = 2 UMETA(DisplayName = "Use SmallRocket"),
+	NonType = 3 UMETA(DisplayName = "Use NonType")
 };
 
 UCLASS()

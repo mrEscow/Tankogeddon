@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "GameStruct.h"
+
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "AmmoBox.generated.h"
@@ -21,8 +23,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo")
 	TSubclassOf<class ACannon> CannonClass; // тип пушки
 
-	//UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ammo")
-	//TSubclassOf<class AProjectile> ProjectileClass; // снаряд
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Type")
+	ERocketType Type = ERocketType::NonType; //тип пушки
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo")
 	int32 Ammo = 0; // количество снарядов

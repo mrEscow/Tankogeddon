@@ -2,6 +2,10 @@
 
 #pragma once
 
+#include "GameStruct.h"
+
+#include "Components/ArrowComponent.h"
+
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
@@ -15,10 +19,21 @@ public:
 	AProjectile();
 
 	void Start();
+
+	// for pool
+	bool InActive() { return IsActive; }
+	void SetActive(bool Active) { IsActive = Active; }
+	//void SetType(ERocketType NewType) { Type = NewType; }
+	ERocketType GetType() { return Type; }
+	void SetTimeLive(float Range) { TimeLive = Range / MoveSpeed; }
+	void SetHomePoint(UArrowComponent* HomePoint) { ProjectileHomePoint = HomePoint; }
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	class UStaticMeshComponent* Mesh; // 3D-модель снаряда
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Type")
+	ERocketType Type = ERocketType::NonType; //тип пушки
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement|Speed")
 	float MoveSpeed = 100.0f; // скорость полёта снаряда
@@ -29,8 +44,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
 	float Damage = 1; // повреждения, которые будет наносить снаряд при попадании.
 
-
 	FTimerHandle MovementTimerHandle;
+
+private:
+	//for pool
+	FTimerHandle LiveTimerHandle;
+	float TimeLive = 10;
+	UArrowComponent* ProjectileHomePoint; // точка, где хранятся снаряды
+protected:
+	void ReturnPool();
 
 protected:
 	UFUNCTION() // обнаружение столкновения с другими объектами.
@@ -42,5 +64,8 @@ protected:
 
 	UFUNCTION()
 	void Move();
+
+private:
+	bool IsActive = false;
 
 };

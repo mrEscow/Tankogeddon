@@ -33,7 +33,7 @@ protected:
 	void MashinGunFire();
 	void LaserFire();
 
-	void ChangeRocketType();
+	void ChangeMainCannon();
 	void ReloadAmmo();
 
 	FVector MousePos;

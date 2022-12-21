@@ -87,9 +87,12 @@ void ATankPawn::LaserFire()
 	}
 }
 
-void ATankPawn::ChangeRocketType()
+void ATankPawn::ChangeMainCannon()
 {
-
+	if (CannonClassSecond)
+	{
+		SetupCannon(CannonClassSecond, SecondRocketType, RocketCannon->GetAllAmmo());
+	}
 }
 
 void  ATankPawn::ReloadAmmo()
@@ -100,13 +103,20 @@ void  ATankPawn::ReloadAmmo()
 	}
 }
 
-void ATankPawn::SetupCannon(TSubclassOf<ACannon> newRocketCannonClass, /*TSubclassOf< AProjectile> newProjectileClass,*/  int32 ammoCount)
+void ATankPawn::SetupCannon(TSubclassOf<ACannon> newRocketCannonClass, ERocketType NewRocketType, int32 ammoCount)
 {
 	if (!newRocketCannonClass)
 	{
 		return;
 	}
 
+	if (CannonClassMain)
+	{
+		CannonClassSecond = CannonClassMain;
+		SecondRocketType = RocketCannon->GetRocketType();
+	}
+
+	CannonClassMain = newRocketCannonClass;
 
 	if (RocketCannon)
 	{
@@ -117,14 +127,13 @@ void ATankPawn::SetupCannon(TSubclassOf<ACannon> newRocketCannonClass, /*TSubcla
 	spawnParams.Instigator = this;
 	spawnParams.Owner = this;
 
-	RocketCannon = GetWorld()->SpawnActor<ACannon>(newRocketCannonClass, spawnParams);
+	RocketCannon = GetWorld()->SpawnActor<ACannon>(CannonClassMain, spawnParams);
 
 	RocketCannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 
-	//if (ProjectileClass)
-	//{
-	//	RocketCannon->setupProjectile(ProjectileClass);
-	//}
+	RocketCannon->SetProjectPool(ProjectilePool);
+
+	RocketCannon->SetRocketType(NewRocketType);
 		
 	if (ammoCount > 0)
 	{
@@ -147,7 +156,9 @@ void ATankPawn::BeginPlay()
 
 	TankController = Cast<ATankPlayerController>(GetController());
 
-	SetupCannon(CannonClass, 1);
+	ProjectilePool  = GetWorld()->SpawnActor<AProjectilePool>(AProjectilePoolClass);
+
+	SetupCannon(CannonClassMain, ERocketType::NonType, 1);
 }
 
 void ATankPawn::MoveAndRotationBase(float DeltaTime)

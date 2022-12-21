@@ -7,7 +7,7 @@ ARocket_Yellow::ARocket_Yellow()
 {
 	MoveSpeed = 2500.0f;
 	Damage = 20.0f;
-
+	Type = ERocketType::MidlRocket;
 }
 
 void ARocket_Yellow::CollisionWith(class AActor* OtherActor)
@@ -18,7 +18,8 @@ void ARocket_Yellow::CollisionWith(class AActor* OtherActor)
 		UE_LOG(LogTemp, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
 
 		OtherActor->Destroy();
-		Destroy();
+		//Destroy();
+		ReturnPool();
 
 		GEngine->AddOnScreenDebugMessage(10, 1, FColor::Yellow, "BOOM");
 	}
