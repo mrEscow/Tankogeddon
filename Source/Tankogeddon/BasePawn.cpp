@@ -21,6 +21,9 @@ ABasePawn::ABasePawn()
 	TurretMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretMesh"));
 	TurretMesh->SetupAttachment(BaseMesh);
 
+	CannonSetupPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("CannonSetupPoint"));
+	CannonSetupPoint->SetupAttachment(TurretMesh);
+
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Healthcomponent"));
 	HealthComponent->OnDie.AddUObject(this, &ABasePawn::Die);
 	HealthComponent->OnDamaged.AddUObject(this, &ABasePawn::DamageTaked);
@@ -33,6 +36,14 @@ void ABasePawn::BeginPlay()
 	SetupCannon(CannonClass);
 }
 
+void ABasePawn::ReloadAmmo()
+{
+	if (Cannon)
+	{
+		Cannon->ReloadAmmo();
+	}
+}
+
 void ABasePawn::SetupCannon(TSubclassOf<ACannon> NewRocketCannonClass, ERocketType NewRocketType, int32 NewAmmo)
 {
 	if (!NewRocketCannonClass)
@@ -43,7 +54,11 @@ void ABasePawn::SetupCannon(TSubclassOf<ACannon> NewRocketCannonClass, ERocketTy
 	if (CannonClass)
 	{
 		CannonClassSecond = CannonClass;
-		CannonRocketTypeSecond = Cannon->GetRocketType();
+		if (Cannon)
+		{
+			CannonRocketTypeSecond = Cannon->GetRocketType();
+		}
+
 	}
 
 	CannonClass = NewRocketCannonClass;
@@ -75,6 +90,14 @@ void ABasePawn::AddAmmo(int32 AmmoCount)
 	{
 		Cannon->AddAmmo(AmmoCount);
 		Cannon->ReloadAmmo();
+	}
+}
+
+void ABasePawn::Fire()
+{
+	if (Cannon)
+	{
+		Cannon->Fire();
 	}
 }
 

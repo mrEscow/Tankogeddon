@@ -3,33 +3,18 @@
 #include "TankPawn.h"
 
 #include "TankPlayerController.h"
-
 #include "Cannon.h"
-
-#include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/ArrowComponent.h"
-
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "DrawDebugHelpers.h"
 
-#include "HealthComponent.h"
-
 
 ATankPawn::ATankPawn()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
-	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("RootComponent"));
-	RootComponent = BoxCollision;
-
-	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
-	BaseMesh->SetupAttachment(BoxCollision);
-
-	TurretMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretMesh"));
-	TurretMesh->SetupAttachment(BaseMesh);
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(BoxCollision);
@@ -41,32 +26,7 @@ ATankPawn::ATankPawn()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
 
-	CannonSetupPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("CannonSetupPoint"));
-	CannonSetupPoint->SetupAttachment(TurretMesh);
-
-	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Healthcomponent"));
-	HealthComponent->OnDie.AddUObject(this, &ATankPawn::Die);
-	HealthComponent->OnDamaged.AddUObject(this, &ATankPawn::DamageTaked);
-
 }
-
-void ATankPawn::TakeDamage(FDamageData DamageData)
-{
-	HealthComponent->TakeDamage(DamageData);
-	UE_LOG(LogTemp, Warning, TEXT("ATankPawn::TakeDamage(FDamageData DamageData)"));
-}
-
-void ATankPawn::Die()
-{
-	Destroy();
-}
-
-void ATankPawn::DamageTaked(float DamageValue)
-{
-
-	UE_LOG(LogTemp, Warning, TEXT("Tank %s taked damage:%f Health:%f"), *GetName(), DamageValue, HealthComponent->GetHealth());
-}
-
 
 void ATankPawn::Tick(float DeltaTime)
 {
@@ -75,6 +35,7 @@ void ATankPawn::Tick(float DeltaTime)
 	MoveAndRotationBase(DeltaTime);
 
 	RotationTurrel(DeltaTime);
+
 }
 
 void ATankPawn::MoveBase(float Value)
@@ -87,91 +48,22 @@ void ATankPawn::RotationBase(float Value)
 	rotationBaseAxisValue = Value;
 }
 
-void ATankPawn::RocketFire()
-{
-	if (RocketCannon)
-	{
-		RocketCannon->Fire();
-	}
-}
-
-void ATankPawn::MashinGunFire()
-{
-	if (MachinGunCannon)
-	{
-		MachinGunCannon->Fire();
-	}
-}
-
-void ATankPawn::LaserFire()
-{
-	if (LaserCannon)
-	{
-		LaserCannon->Fire();
-	}
-}
-
 void ATankPawn::ChangeMainCannon()
 {
 	if (CannonClassSecond)
 	{
-		SetupCannon(CannonClassSecond, SecondRocketType, RocketCannon->GetAllAmmo());
+		SetupCannon(CannonClassSecond, CannonRocketTypeSecond, Cannon->GetAllAmmo());
 	}
+
 }
 
 void  ATankPawn::ReloadAmmo()
 {
-	if (RocketCannon)
+	if (Cannon)
 	{
-		RocketCannon->ReloadAmmo();
-	}
-}
-
-void ATankPawn::SetupCannon(TSubclassOf<ACannon> newRocketCannonClass, ERocketType NewRocketType, int32 ammoCount)
-{
-	if (!newRocketCannonClass)
-	{
-		return;
+		Cannon->ReloadAmmo();
 	}
 
-	if (CannonClassMain)
-	{
-		CannonClassSecond = CannonClassMain;
-		SecondRocketType = RocketCannon->GetRocketType();
-	}
-
-	CannonClassMain = newRocketCannonClass;
-
-	if (RocketCannon)
-	{
-		RocketCannon->Destroy();
-	}
-
-	FActorSpawnParameters spawnParams;
-	spawnParams.Instigator = this;
-	spawnParams.Owner = this;
-
-	RocketCannon = GetWorld()->SpawnActor<ACannon>(CannonClassMain, spawnParams);
-
-	RocketCannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-
-	//RocketCannon->SetProjectPool(ProjectilePool);
-
-	RocketCannon->SetRocketType(NewRocketType);
-		
-	if (ammoCount > 0)
-	{
-		AddAmmo(ammoCount);
-	}
-}
-
-void ATankPawn::AddAmmo(int32 AmmoCount)
-{
-	if (RocketCannon)
-	{
-		RocketCannon->AddAmmo(AmmoCount);
-		RocketCannon->ReloadAmmo();
-	}
 }
 
 void ATankPawn::BeginPlay()
@@ -180,9 +72,6 @@ void ATankPawn::BeginPlay()
 
 	TankController = Cast<ATankPlayerController>(GetController());
 
-	//ProjectilePool  = GetWorld()->SpawnActor<AProjectilePool>(AProjectilePoolClass);
-
-	SetupCannon(CannonClassMain, ERocketType::NonType, 1);
 }
 
 void ATankPawn::MoveAndRotationBase(float DeltaTime)
@@ -198,6 +87,7 @@ void ATankPawn::MoveAndRotationBase(float DeltaTime)
 	FRotator NewRotation = FMath::Lerp(ChangeRotation, CurrentRotation, BaseRotationInterpolationKey);
 
 	SetActorLocationAndRotation(NewPosition, NewRotation, false, 0, ETeleportType::None);
+
 }
 
 void ATankPawn::RotationTurrel(float DeltaTime)
@@ -216,6 +106,7 @@ void ATankPawn::RotationTurrel(float DeltaTime)
 		FVector turretPos = TurretMesh->GetComponentLocation();
 		//DrawDebugLine(GetWorld(), turretPos, mousePos, FColor::Green, false, 0.1f, 0, 5);
 	}
+
 }
 
 

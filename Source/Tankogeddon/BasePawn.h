@@ -17,12 +17,14 @@ class TANKOGEDDON_API ABasePawn : public APawn, public IDamageTaker
 public:
 	ABasePawn();
 
+	void Fire();
+
+	void SetupCannon(TSubclassOf<class ACannon> NewRocketCannonClass, ERocketType NewRocketType = ERocketType::NonType, int32 NewAmmo = 0);
+
 protected:
 	virtual void BeginPlay() override;
 
-	virtual void ReloadAmmo() = 0;
-
-	void SetupCannon(TSubclassOf<ACannon> NewRocketCannonClass, ERocketType NewRocketType = ERocketType::NonType, int32 NewAmmo = 0);
+	virtual void ReloadAmmo();
 
 	void AddAmmo(int32 AmmoCount);
 

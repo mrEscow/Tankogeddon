@@ -3,51 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ArrowComponent.h"
-#include "Components/BoxComponent.h"
-#include "GameFramework/Pawn.h"
-#include "Cannon.h"
-#include "DamageTaker.h"
+#include "BasePawn.h"
 #include "TurretPawn.generated.h"
 
 UCLASS()
-class TANKOGEDDON_API ATurretPawn : public APawn, public IDamageTaker
+class TANKOGEDDON_API ATurretPawn : public ABasePawn
 {
 	GENERATED_BODY()
 
 public:
 	ATurretPawn();
 
-	// Унаследовано через IDamageTaker
-	virtual void TakeDamage(FDamageData DamageData) override;
-
-	UFUNCTION()
-	void Die();
-
-	UFUNCTION()
-	void DamageTaked(float DamageValue);
+	virtual void ReloadAmmo() override;
 
 protected:
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UStaticMeshComponent* BaseMesh;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UStaticMeshComponent* TurretMesh;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UArrowComponent* CannonSetupPoint;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UBoxComponent* BoxCollider;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	class UHealthComponent* HealthComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo")
-	TSubclassOf<ACannon> CannonClass;
-
-	UPROPERTY()
-	ACannon* Cannon;
 
 	UPROPERTY()
 	APawn* PlayerPawn;
@@ -70,7 +39,6 @@ protected:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void Destroyed() override;
 
 	void Targeting();
 	void RotateToPlayer();

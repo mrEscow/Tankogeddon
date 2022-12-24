@@ -2,6 +2,7 @@
 
 
 #include "TurretPawn.h"
+
 #include "TankPlayerController.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Cannon.h"
@@ -10,25 +11,13 @@
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
 
-#include "HealthComponent.h"
-
 
 
 ATurretPawn::ATurretPawn()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollider"));
-	RootComponent = BoxCollider;
-
-	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
-	BaseMesh->SetupAttachment(BoxCollider);
-
-	TurretMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretMesh"));
 	TurretMesh->SetupAttachment(BaseMesh, "ADD_Parts_Here_Socket");
-
-	CannonSetupPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("CannonSetupPoint"));
-	CannonSetupPoint->AttachToComponent(TurretMesh, FAttachmentTransformRules::KeepRelativeTransform);
 
 	UStaticMesh * turretMeshTemp = LoadObject<UStaticMesh>(this, *TurretMeshPath);
 	if (turretMeshTemp)
@@ -42,25 +31,14 @@ ATurretPawn::ATurretPawn()
 		BaseMesh->SetStaticMesh(baseMeshTemp);
 	}
 
-	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Healthcomponent"));
-	HealthComponent->OnDie.AddUObject(this, &ATurretPawn::Die);
-	HealthComponent->OnDamaged.AddUObject(this, &ATurretPawn::DamageTaked);
-
 }
 
-void ATurretPawn::TakeDamage(FDamageData DamageData)
+void ATurretPawn::ReloadAmmo()
 {
-	HealthComponent->TakeDamage(DamageData);
-}
-
-void ATurretPawn::Die()
-{
-	Destroy();
-}
-
-void ATurretPawn::DamageTaked(float DamageValue)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Turret %s taked damage:%f Health:%f"), *GetName(), DamageValue, HealthComponent->GetHealth());
+	if (Cannon)
+	{
+		Cannon->ReloadAmmo();
+	}
 }
 
 void ATurretPawn::BeginPlay()
@@ -82,15 +60,6 @@ void ATurretPawn::BeginPlay()
 	GetWorld()->GetTimerManager().SetTimer(_targetingTimerHandle, this, &ATurretPawn::Targeting, TargetingRate, true, TargetingRate);
 }
 
-void ATurretPawn::Destroyed()
-{
-	if (Cannon)
-	{
-		Cannon->Destroy();
-	}
-
-}
-
 void ATurretPawn::Targeting()
 {
 	if (!PlayerPawn)
@@ -104,10 +73,9 @@ void ATurretPawn::Targeting()
 
 		if (CanFire())
 		{
-			Fire();
+			Super::Fire();
 		}
 	}
-
 }
 
 void ATurretPawn::RotateToPlayer()
@@ -141,11 +109,3 @@ bool ATurretPawn::CanFire()
 	return aimAngle <= Accurency;
 }
 
-void ATurretPawn::Fire()
-{
-	if (Cannon)
-	{
-		Cannon->Fire();
-	}
-
-}

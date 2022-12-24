@@ -64,7 +64,7 @@ void ATankPlayerController::RocketFire()
 {
 	if (TankPawn)
 	{
-		TankPawn->RocketFire();
+		TankPawn->Fire();
 	}
 }
 
@@ -72,7 +72,7 @@ void ATankPlayerController::MashinGunFire()
 {
 	if (TankPawn)
 	{
-		TankPawn->MashinGunFire();
+		TankPawn->Fire();
 	}
 }
 
@@ -80,7 +80,7 @@ void ATankPlayerController::LaserFire()
 {
 	if (TankPawn)
 	{
-		TankPawn->LaserFire();
+		TankPawn->Fire();
 	}
 }
 

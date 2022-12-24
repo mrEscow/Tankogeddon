@@ -131,13 +131,6 @@ void ACannon::AutoShyting()
 	}
 }
 
-//void ACannon::SetProjectPool(AProjectilePool* Pool)
-//{
-//	if (Pool)
-//	{
-//		ProjectilePool = Pool;
-//	}
-//}
 
 void ACannon::SetRocketType(ERocketType NewRocketType)
 {
@@ -289,7 +282,12 @@ bool ACannon::IsReadyToFire()
 {
 	if (CurrentCountAmmo == 0)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Reload your weapon!!!  R!");
+		if (CountAmmo > 0)
+		{
+			ReloadAmmo();
+		}
+
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, "Reload your weapon!!!  R!");
 	}
 
 	if (isReloadWeapon)

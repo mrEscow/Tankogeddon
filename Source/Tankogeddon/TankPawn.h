@@ -3,15 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
-#include "DamageTaker.h"
+#include "BasePawn.h"
 #include "TankPawn.generated.h"
 
 class UStaticMeshComponent;
 class ACannon;
 
 UCLASS()
-class TANKOGEDDON_API ATankPawn : public APawn, public IDamageTaker
+class TANKOGEDDON_API ATankPawn : public ABasePawn
 {
 	GENERATED_BODY()
 
@@ -21,44 +20,15 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void MoveBase(float Value);
+
 	void RotationBase(float Value);
 
-	void RocketFire();
-	void MashinGunFire();
-	void LaserFire();
-
 	void ChangeMainCannon();
-	void ReloadAmmo();
 
-	void SetupCannon(TSubclassOf<ACannon> newRocketCannonClass, ERocketType RocketType = ERocketType::NonType, int32 ammoCount = 0);
-	void AddAmmo(int32 ammoCount);
-
-protected:
-	// Унаследовано через IDamageTaker
-	virtual void TakeDamage(FDamageData DamageData) override;
-
-	UFUNCTION()
-	void Die();
-	UFUNCTION()
-	void DamageTaked(float DamageValue);
-
+	virtual void ReloadAmmo() override;
 
 protected:
 	virtual void BeginPlay() override;
-
-	// body
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	class UBoxComponent* BoxCollision;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	UStaticMeshComponent* BaseMesh;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	UStaticMeshComponent* TurretMesh;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	class UHealthComponent* HealthComponent;
-
 
 	// camera
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
@@ -67,27 +37,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	class UCameraComponent* Camera;
 
-	// guns
-	UPROPERTY()
-	ACannon* RocketCannon;
-
-	UPROPERTY()
-	ACannon* MachinGunCannon;
-
-	UPROPERTY()
-	ACannon* LaserCannon;
-
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cannon")
-	TSubclassOf<ACannon> CannonClassMain;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cannon")
-	TSubclassOf<ACannon> CannonClassSecond;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cannon")
-	class UArrowComponent* CannonSetupPoint;
-
-	ERocketType SecondRocketType = ERocketType::NonType;
 
 	// props
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
@@ -117,6 +66,5 @@ private:
 	void MoveAndRotationBase(float DeltaTime);
 
 	void RotationTurrel(float DeltaTime);
-
 
 };
