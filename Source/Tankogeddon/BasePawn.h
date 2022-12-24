@@ -22,7 +22,7 @@ protected:
 
 	virtual void ReloadAmmo() = 0;
 
-	void SetupCannon(TSubclassOf<ACannon> newRocketCannonClass, ERocketType NewRocketType = ERocketType::NonType, int32 NewAmmo = 0);
+	void SetupCannon(TSubclassOf<ACannon> NewRocketCannonClass, ERocketType NewRocketType = ERocketType::NonType, int32 NewAmmo = 0);
 
 	void AddAmmo(int32 AmmoCount);
 
