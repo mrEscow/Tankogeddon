@@ -4,6 +4,9 @@
 #include "Components/StaticMeshComponent.h"
 #include "TimerManager.h"
 
+#include "DamageTaker.h"
+
+
 AProjectile::AProjectile()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -44,9 +47,43 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 									 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 									 bool bFromSweep, const FHitResult& SweepResult )
 {
-	UE_LOG(LogTemp, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
+	AActor* Projectile = Cast<AProjectile>(OtherActor);
 
-	CollisionWith(OtherActor);
+	if (Projectile)
+	{
+		return;
+	}
+
+	
+
+	AActor* owner = GetOwner();
+	AActor* ownerByOwner = owner != nullptr ? owner->GetOwner() : nullptr;
+
+	if (OtherActor != owner && OtherActor != ownerByOwner)
+	{
+		IDamageTaker* damageTakerActor = Cast<IDamageTaker>(OtherActor);
+
+		if (damageTakerActor)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
+
+			FDamageData damageData;
+			damageData.DamageValue = Damage;
+			damageData.Instigator = owner;
+			damageData.DamageMaker = this;
+			damageTakerActor->TakeDamage(damageData);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("WTF!"));
+			//OtherActor->Destroy();
+		}
+		ReturnPool();
+		//Destroy();
+	}
+
+	//virtual metod for chailds
+	//CollisionWith(OtherActor);
 	
 }
 
@@ -55,7 +92,7 @@ void AProjectile::CollisionWith(AActor* OtherActor)
 	if (OtherActor)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
-		OtherActor->Destroy();
+		//OtherActor->Destroy();
 		//Destroy();
 		ReturnPool();
 	}

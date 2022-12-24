@@ -4,7 +4,6 @@
 
 #include "TankPlayerController.h"
 
-//#include "Projectile.h"
 #include "Cannon.h"
 
 #include "Components/StaticMeshComponent.h"
@@ -15,6 +14,8 @@
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "DrawDebugHelpers.h"
+
+#include "HealthComponent.h"
 
 
 ATankPawn::ATankPawn()
@@ -42,7 +43,30 @@ ATankPawn::ATankPawn()
 
 	CannonSetupPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("CannonSetupPoint"));
 	CannonSetupPoint->SetupAttachment(TurretMesh);
+
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Healthcomponent"));
+	HealthComponent->OnDie.AddUObject(this, &ATankPawn::Die);
+	HealthComponent->OnDamaged.AddUObject(this, &ATankPawn::DamageTaked);
+
 }
+
+void ATankPawn::TakeDamage(FDamageData DamageData)
+{
+	HealthComponent->TakeDamage(DamageData);
+	UE_LOG(LogTemp, Warning, TEXT("ATankPawn::TakeDamage(FDamageData DamageData)"));
+}
+
+void ATankPawn::Die()
+{
+	Destroy();
+}
+
+void ATankPawn::DamageTaked(float DamageValue)
+{
+
+	UE_LOG(LogTemp, Warning, TEXT("Tank %s taked damage:%f Health:%f"), *GetName(), DamageValue, HealthComponent->GetHealth());
+}
+
 
 void ATankPawn::Tick(float DeltaTime)
 {
@@ -131,7 +155,7 @@ void ATankPawn::SetupCannon(TSubclassOf<ACannon> newRocketCannonClass, ERocketTy
 
 	RocketCannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 
-	RocketCannon->SetProjectPool(ProjectilePool);
+	//RocketCannon->SetProjectPool(ProjectilePool);
 
 	RocketCannon->SetRocketType(NewRocketType);
 		
@@ -156,7 +180,7 @@ void ATankPawn::BeginPlay()
 
 	TankController = Cast<ATankPlayerController>(GetController());
 
-	ProjectilePool  = GetWorld()->SpawnActor<AProjectilePool>(AProjectilePoolClass);
+	//ProjectilePool  = GetWorld()->SpawnActor<AProjectilePool>(AProjectilePoolClass);
 
 	SetupCannon(CannonClassMain, ERocketType::NonType, 1);
 }
@@ -193,3 +217,5 @@ void ATankPawn::RotationTurrel(float DeltaTime)
 		//DrawDebugLine(GetWorld(), turretPos, mousePos, FColor::Green, false, 0.1f, 0, 5);
 	}
 }
+
+

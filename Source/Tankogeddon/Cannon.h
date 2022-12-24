@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "ProjectilePool.h"
+
 
 #include "CoreMinimal.h"
 #include "GameStruct.h"
@@ -29,14 +29,13 @@ public:
 
 	int32 GetAllAmmo() { return CurrentCountAmmo + CountAmmo; }
 
-	void SetProjectPool(AProjectilePool* Pool);
+	//void SetProjectPool(AProjectilePool* Pool);
 	void SetRocketType(ERocketType NewRocketType);
 	ERocketType GetRocketType();
 
-private:
-
 	bool IsReadyToFire();
 
+private:
 	void FireProjectileShut();
 	void FireTraceShut();
 	void FireMashinGun();
@@ -109,5 +108,5 @@ private:
 
 	void Reload();
 
-	AProjectilePool* ProjectilePool;
+	class AGameSingleton* GameSingleton;
 };

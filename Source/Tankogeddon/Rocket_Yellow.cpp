@@ -17,7 +17,7 @@ void ARocket_Yellow::CollisionWith(class AActor* OtherActor)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
 
-		OtherActor->Destroy();
+		//OtherActor->Destroy();
 		//Destroy();
 		ReturnPool();
 

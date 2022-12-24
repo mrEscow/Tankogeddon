@@ -8,6 +8,13 @@
 #include "Engine/Engine.h"
 #include "DrawDebugHelpers.h"
 
+#include "ProjectilePool.h"
+
+#include "GameSingleton.h"
+
+#include "Engine/World.h"
+
+
 ACannon::ACannon()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -21,6 +28,9 @@ ACannon::ACannon()
 	ProjectileSpawnPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("Spawnpoint"));
 	ProjectileSpawnPoint->SetupAttachment(Mesh);
 
+
+
+	GameSingleton = AGameSingleton::Get();
 }
 
 
@@ -119,13 +129,13 @@ void ACannon::AutoShyting()
 	}
 }
 
-void ACannon::SetProjectPool(AProjectilePool* Pool)
-{
-	if (Pool)
-	{
-		ProjectilePool = Pool;
-	}
-}
+//void ACannon::SetProjectPool(AProjectilePool* Pool)
+//{
+//	if (Pool)
+//	{
+//		ProjectilePool = Pool;
+//	}
+//}
 
 void ACannon::SetRocketType(ERocketType NewRocketType)
 {
@@ -141,7 +151,21 @@ ERocketType ACannon::GetRocketType()
 
 void ACannon::FireProjectileShut()
 {
-	AProjectile* NewProjectile;
+	AProjectile* NewProjectile = nullptr;
+
+	AProjectilePool* ProjectilePool = nullptr;
+
+
+	if (GameSingleton)
+	{
+		UWorld* World = GetWorld();
+		ProjectilePool = GameSingleton->GetProjectilePool(World);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, "DebugMessage: NO SINGLETON!!!");
+	}
+
 
 	if (ProjectilePool)
 	{
@@ -153,14 +177,6 @@ void ACannon::FireProjectileShut()
 			NewProjectile->SetActorLocation(ProjectileSpawnPoint->GetComponentLocation());
 			NewProjectile->SetActorRotation(ProjectileSpawnPoint->GetComponentRotation());
 		}
-	}
-	else
-	{
-		 NewProjectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass,
-			ProjectileSpawnPoint->GetComponentLocation(),
-			ProjectileSpawnPoint->GetComponentRotation());
-
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, "DebugMessage: create from spawn");
 	}
 
 	if (NewProjectile)

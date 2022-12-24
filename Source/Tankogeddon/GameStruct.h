@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+
 #include "GameStruct.generated.h"
 
 UENUM(BlueprintType)
@@ -20,6 +21,20 @@ enum class ERocketType : uint8 {
 	SmallRocket = 2 UMETA(DisplayName = "Use SmallRocket"),
 	NonType = 3 UMETA(DisplayName = "Use NonType")
 };
+
+
+USTRUCT()
+struct FDamageData
+{
+	GENERATED_BODY()
+		UPROPERTY()
+		float DamageValue;
+	UPROPERTY()
+		AActor* Instigator;
+	UPROPERTY()
+		AActor* DamageMaker;
+};
+
 
 UCLASS()
 class TANKOGEDDON_API UGameStruct : public UObject

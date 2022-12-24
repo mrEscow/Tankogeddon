@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "Projectile.h"
-#include "Rcket_Green.generated.h"
+#include "Rocket_Green.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TANKOGEDDON_API ARcket_Green : public AProjectile
+class TANKOGEDDON_API ARocket_Green : public AProjectile
 {
 	GENERATED_BODY()
 	
 public:
-	ARcket_Green();
+	ARocket_Green();
 
 protected:
 	void CollisionWith(class AActor* OtherActor) override;

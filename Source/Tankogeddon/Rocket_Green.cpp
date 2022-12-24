@@ -1,16 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Rcket_Green.h"
+#include "Rocket_Green.h"
 
-ARcket_Green::ARcket_Green()
+ARocket_Green::ARocket_Green()
 {
 	MoveSpeed = 2500.0f;
 	Damage = 10.0f;
 	Type = ERocketType::SmallRocket;
 }
 
-void ARcket_Green::CollisionWith(class AActor* OtherActor)
+void ARocket_Green::CollisionWith(class AActor* OtherActor)
 {
 
 	if (OtherActor)

@@ -6,17 +6,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "DamageTaker.h"
 #include "TankPawn.generated.h"
-
-
 
 class UStaticMeshComponent;
 class ACannon;
 
-
-
 UCLASS()
-class TANKOGEDDON_API ATankPawn : public APawn
+class TANKOGEDDON_API ATankPawn : public APawn, public IDamageTaker
 {
 	GENERATED_BODY()
 
@@ -39,6 +36,16 @@ public:
 	void AddAmmo(int32 ammoCount);
 
 protected:
+	// Унаследовано через IDamageTaker
+	virtual void TakeDamage(FDamageData DamageData) override;
+
+	UFUNCTION()
+	void Die();
+	UFUNCTION()
+	void DamageTaked(float DamageValue);
+
+
+protected:
 	virtual void BeginPlay() override;
 
 	// body
@@ -50,6 +57,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UStaticMeshComponent* TurretMesh;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	class UHealthComponent* HealthComponent;
+
 
 	// camera
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
@@ -101,12 +112,12 @@ protected:
 	UPROPERTY()
 	class ATankPlayerController* TankController;
 
-	// ProjectPool
-	UPROPERTY()
-	AProjectilePool* ProjectilePool;
+	//// ProjectPool
+	//UPROPERTY()
+	//AProjectilePool* ProjectilePool;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ProjectPool")
-	TSubclassOf<AProjectilePool> AProjectilePoolClass;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ProjectPool")
+	//TSubclassOf<AProjectilePool> AProjectilePoolClass;
 
 	float moveBaseAxisValue = 0.0f;
 	float rotationBaseAxisValue = 0.0f;
@@ -115,5 +126,6 @@ private:
 	void MoveAndRotationBase(float DeltaTime);
 
 	void RotationTurrel(float DeltaTime);
+
 
 };

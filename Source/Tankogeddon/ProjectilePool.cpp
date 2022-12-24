@@ -31,7 +31,9 @@ AProjectile* AProjectilePool::Get(TSubclassOf<class AProjectile> ProjectileClass
 
 	// если не нашли свободный объект, то расширяем пул
 	AProjectile* record;
+
 	record = GetWorld()->SpawnActor<AProjectile>(ProjectileClass);
+	//record = NewObject<AProjectile>(ProjectileClass);
 
 	record->SetHomePoint(ProjectileSpawnPoint);
 	Pool.Add(record);
