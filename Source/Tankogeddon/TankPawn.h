@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "ProjectilePool.h"
-
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "DamageTaker.h"
@@ -111,13 +109,6 @@ protected:
 	// controller
 	UPROPERTY()
 	class ATankPlayerController* TankController;
-
-	//// ProjectPool
-	//UPROPERTY()
-	//AProjectilePool* ProjectilePool;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ProjectPool")
-	//TSubclassOf<AProjectilePool> AProjectilePoolClass;
 
 	float moveBaseAxisValue = 0.0f;
 	float rotationBaseAxisValue = 0.0f;

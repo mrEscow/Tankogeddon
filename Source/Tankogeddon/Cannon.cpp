@@ -14,6 +14,8 @@
 
 #include "Engine/World.h"
 
+#include "DamageTaker.h"
+
 
 ACannon::ACannon()
 {
@@ -206,7 +208,22 @@ void ACannon::FireTraceShut()
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Actor %s. "),  *hitResult.GetActor()->GetName());
 
-			hitResult.GetActor()->Destroy();
+			//hitResult.GetActor()->Destroy();
+
+			float Damage = 50.0f;
+
+			AActor* owner = GetOwner();
+
+			IDamageTaker* damageTakerActor = Cast<IDamageTaker>(hitResult.GetActor());
+
+			if (damageTakerActor)
+			{
+				FDamageData damageData;
+				damageData.DamageValue = Damage;
+				damageData.Instigator = owner;
+				damageData.DamageMaker = this;
+				damageTakerActor->TakeDamage(damageData);
+			}
 		}
 	}
 	else
