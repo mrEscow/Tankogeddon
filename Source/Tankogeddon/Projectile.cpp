@@ -44,10 +44,14 @@ void AProjectile::Start()
 
 void AProjectile::ReturnPool()
 {
+	OnKill.Clear();
+
 	GetWorld()->GetTimerManager().ClearTimer(MovementTimerHandle);
-	IsActive = false;
+
 	SetActorLocation(ProjectileHomePoint->GetComponentLocation());
 	SetActorRotation(ProjectileHomePoint->GetComponentRotation());
+
+	IsActive = false;
 }
 
 void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -86,13 +90,9 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 			//OtherActor->Destroy();
 		}
 
-
-
 		ReturnPool();
 	}
 
-	//virtual metod for chailds
-	//CollisionWith(OtherActor);
 	
 }
 
@@ -101,8 +101,7 @@ void AProjectile::CollisionWith(AActor* OtherActor)
 	if (OtherActor)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
-		//OtherActor->Destroy();
-		//Destroy();
+
 		ReturnPool();
 	}
 }

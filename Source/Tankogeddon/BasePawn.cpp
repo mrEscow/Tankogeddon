@@ -112,11 +112,6 @@ void ABasePawn::TakeDamage(FDamageData DamageData)
 
 void ABasePawn::Die(AActor* DamageMaker)
 {
-	if (Cannon)
-	{
-		Cannon->Destroy();
-	}
-
 	AProjectile* MyKiller = Cast<AProjectile>(DamageMaker);
 
 	if (MyKiller)
@@ -125,7 +120,11 @@ void ABasePawn::Die(AActor* DamageMaker)
 
 		MyKiller->TakeScore(ScoreForMyDia);
 	}
-	
+
+	if (Cannon)
+	{
+		Cannon->Destroy();
+	}
 
 	Destroy();
 }

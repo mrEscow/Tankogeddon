@@ -30,8 +30,6 @@ ACannon::ACannon()
 	ProjectileSpawnPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("Spawnpoint"));
 	ProjectileSpawnPoint->SetupAttachment(Mesh);
 
-
-
 	GameSingleton = AGameSingleton::Get();
 }
 
@@ -91,6 +89,7 @@ void ACannon::TakeScore(int32 NewScore)
 		OnKill.Broadcast(NewScore);
 	}
 }
+
 
 void ACannon::AddAmmo(int32 AmmoCount)
 {
@@ -175,10 +174,13 @@ void ACannon::FireProjectileShut()
 	if (ProjectilePool)
 	{
 		NewProjectile = ProjectilePool->Get(ProjectileClass, RocketType);
+
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, "DebugMessage: create from pool");
+
 		if (NewProjectile)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, "DebugMessage: create from pool OK");
+
 			NewProjectile->SetActorLocation(ProjectileSpawnPoint->GetComponentLocation());
 			NewProjectile->SetActorRotation(ProjectileSpawnPoint->GetComponentRotation());
 		}

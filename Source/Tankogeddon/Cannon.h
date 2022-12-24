@@ -33,7 +33,6 @@ public:
 
 	int32 GetAllAmmo() { return CurrentCountAmmo + CountAmmo; }
 
-	//void SetProjectPool(AProjectilePool* Pool);
 	void SetRocketType(ERocketType NewRocketType);
 	ERocketType GetRocketType();
 
@@ -57,9 +56,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 	float FireRange = 1000; // дистанция стрельбы
-
-	//UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-	//float FireDamage = 1; // количество наносимых повреждений.
 
 	// тип и класс снаряда
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
