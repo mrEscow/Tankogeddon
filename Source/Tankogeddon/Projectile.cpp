@@ -7,6 +7,16 @@
 #include "DamageTaker.h"
 
 
+void AProjectile::TakeScore(int32 NewScore)
+{
+	if (OnKill.IsBound())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("TAKER: %s Score:  %d"), *GetName(), NewScore);
+
+		OnKill.Broadcast(NewScore);
+	}
+}
+
 AProjectile::AProjectile()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -29,9 +39,6 @@ void AProjectile::Start()
 {
 	GetWorld()->GetTimerManager().SetTimer(MovementTimerHandle, this, &AProjectile::Move, MoveRate, true, MoveRate);
 
-	//const FString DebugMessage = FString::Printf(TEXT("TIMELIVE:   %d   secund!"), TimeLive);
-	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, DebugMessage);
-
 	GetWorld()->GetTimerManager().SetTimer(LiveTimerHandle, this, &AProjectile::ReturnPool, TimeLive, false);
 }
 
@@ -53,9 +60,7 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 	{
 		return;
 	}
-
 	
-
 	AActor* owner = GetOwner();
 	AActor* ownerByOwner = owner != nullptr ? owner->GetOwner() : nullptr;
 
@@ -69,8 +74,10 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 
 			FDamageData damageData;
 			damageData.DamageValue = Damage;
+
 			damageData.Instigator = owner;
 			damageData.DamageMaker = this;
+
 			damageTakerActor->TakeDamage(damageData);
 		}
 		else
@@ -78,8 +85,10 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 			UE_LOG(LogTemp, Warning, TEXT("WTF!"));
 			//OtherActor->Destroy();
 		}
+
+
+
 		ReturnPool();
-		//Destroy();
 	}
 
 	//virtual metod for chailds

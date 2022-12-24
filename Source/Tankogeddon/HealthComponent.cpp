@@ -25,7 +25,7 @@ void UHealthComponent::TakeDamage(FDamageData DamageData)
 	{
 		if (OnDie.IsBound())
 		{
-			OnDie.Broadcast();
+			OnDie.Broadcast(DamageData.DamageMaker);
 		}
 	}
 	else

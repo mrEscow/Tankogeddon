@@ -7,6 +7,8 @@
 #include "Cannon.h"
 #include "Components/ArrowComponent.h"
 
+#include "Projectile.h"
+
 
 ABasePawn::ABasePawn()
 {
@@ -78,6 +80,8 @@ void ABasePawn::SetupCannon(TSubclassOf<ACannon> NewRocketCannonClass, ERocketTy
 
 	Cannon->SetRocketType(NewRocketType);
 
+	Cannon->OnKill.AddUObject(this, &ABasePawn::ScoreTaked);
+
 	if (NewAmmo > 0)
 	{
 		AddAmmo(NewAmmo);
@@ -104,19 +108,36 @@ void ABasePawn::Fire()
 void ABasePawn::TakeDamage(FDamageData DamageData)
 {
 	HealthComponent->TakeDamage(DamageData);
-	UE_LOG(LogTemp, Warning, TEXT("ATankPawn::TakeDamage(FDamageData DamageData)"));
 }
 
-void ABasePawn::Die()
+void ABasePawn::Die(AActor* DamageMaker)
 {
 	if (Cannon)
 	{
 		Cannon->Destroy();
 	}
+
+	AProjectile* MyKiller = Cast<AProjectile>(DamageMaker);
+
+	if (MyKiller)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Killer %s  Kill %s and take Score:  %d"), *MyKiller->GetName(), *GetName(), ScoreForMyDia);
+
+		MyKiller->TakeScore(ScoreForMyDia);
+	}
+	
+
 	Destroy();
 }
 
 void ABasePawn::DamageTaked(float DamageValue)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Tank %s taked damage:%f Health:%f"), *GetName(), DamageValue, HealthComponent->GetHealth());
+	UE_LOG(LogTemp, Warning, TEXT("Pawn %s taked damage:%f Health:%f"), *GetName(), DamageValue, HealthComponent->GetHealth());
+}
+
+void ABasePawn::ScoreTaked(int32 NewScore)
+{
+	MyScore += NewScore;
+
+	UE_LOG(LogTemp, Warning, TEXT("Pawn %s Score:  %d"), *GetName(), MyScore);
 }

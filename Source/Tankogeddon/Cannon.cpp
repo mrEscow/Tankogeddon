@@ -82,6 +82,16 @@ void ACannon::Fire()
 	GetWorld()->GetTimerManager().SetTimer(ReloadCannonTimerHandle, this, &ACannon::Reload, 1 / FireRate, false);
 }
 
+void ACannon::TakeScore(int32 NewScore)
+{
+	if (OnKill.IsBound())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CANNON: %s Score:  %d"), *GetName(), NewScore);
+
+		OnKill.Broadcast(NewScore);
+	}
+}
+
 void ACannon::AddAmmo(int32 AmmoCount)
 {
 	CountAmmo += AmmoCount;
@@ -176,6 +186,7 @@ void ACannon::FireProjectileShut()
 
 	if (NewProjectile)
 	{
+		NewProjectile->OnKill.AddUObject(this, &ACannon::TakeScore);
 		NewProjectile->SetTimeLive(FireRange);
 		NewProjectile->Start();
 	}

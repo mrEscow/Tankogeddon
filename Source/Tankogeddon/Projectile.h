@@ -15,6 +15,13 @@ class TANKOGEDDON_API AProjectile : public AActor
 {
 	GENERATED_BODY()
 
+	DECLARE_EVENT_OneParam(AProjectile, FOnKill, int32 NewScore)
+
+public:
+	FOnKill OnKill;
+
+	void TakeScore(int32 NewScore);
+
 public:
 	AProjectile();
 

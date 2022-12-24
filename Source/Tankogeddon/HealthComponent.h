@@ -14,7 +14,7 @@ class TANKOGEDDON_API UHealthComponent : public UActorComponent
 	GENERATED_BODY()
 
 	// events
-	DECLARE_EVENT(UHealthComponent, FOnDie)
+	DECLARE_EVENT_OneParam(UHealthComponent, FOnDie, AActor* DamageMaker)
 
 	DECLARE_EVENT_OneParam(UHealthComponent, FOnHealthChanged, float)
 

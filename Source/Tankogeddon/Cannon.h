@@ -9,15 +9,19 @@
 #include "GameFramework/Actor.h"
 #include "Cannon.generated.h"
 
-
-
 class UArrowComponent;
-
 
 UCLASS()
 class TANKOGEDDON_API ACannon : public AActor
 {
 	GENERATED_BODY()
+
+	DECLARE_EVENT_OneParam(AProjectile, FOnKill, int32 Score)
+
+public:
+	FOnKill OnKill;
+
+	void TakeScore(int32 NewScore);
 
 public:
 	ACannon();

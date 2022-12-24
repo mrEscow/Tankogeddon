@@ -73,7 +73,7 @@ void ATurretPawn::Targeting()
 
 		if (CanFire())
 		{
-			Super::Fire();
+			Fire();
 		}
 	}
 }
