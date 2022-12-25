@@ -17,5 +17,5 @@ class TANKOGEDDON_API IScorable
 	GENERATED_BODY()
 
 public:
-	virtual void ScoreTaked(int32 NewScore) = 0;
+	virtual int32 GetScore() = 0;
 };

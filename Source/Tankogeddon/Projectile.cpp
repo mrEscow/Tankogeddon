@@ -5,6 +5,8 @@
 #include "TimerManager.h"
 
 #include "DamageTaker.h"
+#include "Scorable.h"
+#include "BasePawn.h"
 
 
 void AProjectile::TakeScore(int32 NewScore)
@@ -14,6 +16,7 @@ void AProjectile::TakeScore(int32 NewScore)
 		UE_LOG(LogTemp, Warning, TEXT("TAKER: %s Score:  %d"), *GetName(), NewScore);
 
 		OnKill.Broadcast(NewScore);
+
 	}
 }
 
@@ -46,6 +49,8 @@ void AProjectile::ReturnPool()
 {
 	OnKill.Clear();
 
+	Score = 0;
+
 	GetWorld()->GetTimerManager().ClearTimer(MovementTimerHandle);
 
 	SetActorLocation(ProjectileHomePoint->GetComponentLocation());
@@ -65,28 +70,42 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 		return;
 	}
 	
-	AActor* owner = GetOwner();
-	AActor* ownerByOwner = owner != nullptr ? owner->GetOwner() : nullptr;
+	AActor* owner = GetOwner(); // cannom
+	AActor* ownerByOwner = owner != nullptr ? owner->GetOwner() : nullptr; // turrel
 
-	if (OtherActor != owner && OtherActor != ownerByOwner)
+	if (OtherActor != owner && OtherActor != ownerByOwner) // if(not me)
 	{
 		IDamageTaker* damageTakerActor = Cast<IDamageTaker>(OtherActor);
+
+		IScorable* scorobleActor = Cast<IScorable>(OtherActor);
 
 		if (damageTakerActor)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
 
+			if (scorobleActor)
+			{
+				Score = scorobleActor->GetScore();
+			}
+
 			FDamageData damageData;
 			damageData.DamageValue = Damage;
-
+			damageData.Score = Score;
 			damageData.Instigator = owner;
 			damageData.DamageMaker = this;
 
 			damageTakerActor->TakeDamage(damageData);
 		}
+		else if (!damageTakerActor && scorobleActor)
+		{
+			Score = scorobleActor->GetScore();
+			TakeScore(Score);
+			OtherActor->Destroy();
+		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("WTF!"));
+			UE_LOG(LogTemp, Warning, TEXT("STOP!"));
+			Score = 0;
 			//OtherActor->Destroy();
 		}
 

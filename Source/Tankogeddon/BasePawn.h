@@ -30,7 +30,9 @@ protected:
 	void AddAmmo(int32 AmmoCount);
 
 	// Унаследовано через IScorable
-	virtual void ScoreTaked(int32 NewScore) override;
+	virtual int32 GetScore() override;
+
+	void ScoreTaked(int32 NewScore);
 
 	// Унаследовано через IDamageTaker
 	virtual void TakeDamage(FDamageData DamageData) override;

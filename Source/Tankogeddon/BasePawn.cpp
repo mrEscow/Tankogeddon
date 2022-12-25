@@ -134,6 +134,11 @@ void ABasePawn::DamageTaked(float DamageValue)
 	UE_LOG(LogTemp, Warning, TEXT("Pawn %s taked damage:%f Health:%f"), *GetName(), DamageValue, HealthComponent->GetHealth());
 }
 
+int32 ABasePawn::GetScore()
+{
+	return ScoreForMyDia;
+}
+
 void ABasePawn::ScoreTaked(int32 NewScore)
 {
 	MyScore += NewScore;

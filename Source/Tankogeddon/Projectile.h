@@ -75,4 +75,6 @@ protected:
 private:
 	bool IsActive = false;
 
+	int32 Score = 0;
+
 };
