@@ -17,6 +17,10 @@ ABasePawn::ABasePawn()
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("RootComponent"));
 	RootComponent = BoxCollision;
 
+	BoxCollision->SetCollisionProfileName(FName("BlockAll"));
+	BoxCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	BoxCollision->SetGenerateOverlapEvents(true);
+
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
 	BaseMesh->SetupAttachment(BoxCollision);
 

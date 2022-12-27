@@ -45,6 +45,9 @@ ACannon::ACannon()
 	AudioEffect->SetupAttachment(sceeneCpm);
 	AudioEffect->SetAutoActivate(false);
 
+	Mesh->SetCollisionProfileName(FName("OverlapAll"));
+	Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	Mesh->SetGenerateOverlapEvents(true);
 }
 
 

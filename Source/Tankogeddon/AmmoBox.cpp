@@ -20,9 +20,7 @@ AAmmoBox::AAmmoBox()
 
 	Mesh->OnComponentBeginOverlap.AddDynamic(this, &AAmmoBox::OnMeshOverlapBegin);
 
-	Mesh->SetCollisionProfileName(FName("OverlapAll"));
-	Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	Mesh->SetGenerateOverlapEvents(true);
+	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
 }
 
