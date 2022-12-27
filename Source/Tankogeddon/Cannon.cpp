@@ -16,6 +16,11 @@
 
 #include "DamageTaker.h"
 
+#include "Particles/ParticleSystemComponent.h"
+
+#include "Components/AudioComponent.h"
+
+#include "Camera/CameraShakeBase.h"
 
 ACannon::ACannon()
 {
@@ -31,6 +36,15 @@ ACannon::ACannon()
 	ProjectileSpawnPoint->SetupAttachment(Mesh);
 
 	GameSingleton = AGameSingleton::Get();
+
+	ShootEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ShootEffect"));
+	ShootEffect->SetupAttachment(ProjectileSpawnPoint);
+	ShootEffect->SetAutoActivate(false);
+
+	AudioEffect = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioEffect"));
+	AudioEffect->SetupAttachment(sceeneCpm);
+	AudioEffect->SetAutoActivate(false);
+
 }
 
 
@@ -188,6 +202,11 @@ void ACannon::FireProjectileShut()
 
 	if (NewProjectile)
 	{
+		NewProjectile->SetActorLocation(ProjectileSpawnPoint->GetComponentLocation());
+		NewProjectile->SetActorRotation(ProjectileSpawnPoint->GetComponentRotation());
+
+		ShootEffects();
+
 		NewProjectile->OnKill.AddUObject(this, &ACannon::TakeScore);
 		NewProjectile->SetTimeLive(FireRange);
 		NewProjectile->Start();
@@ -319,11 +338,44 @@ bool ACannon::IsReadyToFire()
 	}
 		
 	return ReadyToFire  && CurrentCountAmmo > 0 && !isReloadWeapon && !isAutoShyting;
+
 }
 
 void ACannon::Reload()
 {
 	ReadyToFire = true;
+
+}
+
+void ACannon::ShootEffects()
+{
+	if (ShootEffect)
+	{
+		ShootEffect->ActivateSystem();
+	}
+
+	if (AudioEffect)
+	{
+		AudioEffect->Play();
+	}
+
+	if (GetOwner() && GetOwner() == GetWorld()->GetFirstPlayerController()->GetPawn())
+	{
+		if (ShootForceEffect)
+		{
+			FForceFeedbackParameters shootForceEffectParams;
+			shootForceEffectParams.bLooping = false;
+			shootForceEffectParams.Tag = "shootForceEffectParams";
+
+			GetWorld()->GetFirstPlayerController()->ClientPlayForceFeedback(ShootForceEffect, shootForceEffectParams);
+		}
+
+		if (ShootShake)
+		{
+			GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(ShootShake);
+		}
+
+	}
 }
 
 void ACannon::BeginPlay()
@@ -331,7 +383,6 @@ void ACannon::BeginPlay()
 	Super::BeginPlay();
 
 	Reload();
-
 
 }
 

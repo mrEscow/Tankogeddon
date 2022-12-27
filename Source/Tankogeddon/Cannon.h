@@ -90,6 +90,19 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Auto Shuting")
 	float AutoShutTme = 0.02f; // время повторного выстрела
 
+	// effects
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Effects")
+	class UParticleSystemComponent* ShootEffect;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Effects")
+	class UAudioComponent* AudioEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	class UForceFeedbackEffect* ShootForceEffect;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UCameraShakeBase> ShootShake;
+
 private:
 	FTimerHandle ReloadCannonTimerHandle; // структура, использующаяся для работы с таймерами перезарядки оружия.
 
@@ -109,4 +122,6 @@ private:
 	void Reload();
 
 	class AGameSingleton* GameSingleton;
+
+	void ShootEffects();
 };

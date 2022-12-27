@@ -4,38 +4,44 @@
 
 #include "CoreMinimal.h"
 #include "BasePawn.h"
-#include "TankPawn.generated.h"
+#include "AITankPawn.generated.h"
 
-class UStaticMeshComponent;
-class ACannon;
-
+/**
+ * 
+ */
 UCLASS()
-class TANKOGEDDON_API ATankPawn : public ABasePawn
+class TANKOGEDDON_API AAITankPawn : public ABasePawn
 {
 	GENERATED_BODY()
 
 public:
-	ATankPawn();
-
 	virtual void Tick(float DeltaTime) override;
 
 	void MoveBase(float Value);
 
 	void RotationBase(float Value);
 
-	void ChangeMainCannon();
+	UFUNCTION()
+	TArray<FVector> GetPatrollingPoints() { return PatrollingPoints; };
 
-	virtual void ReloadAmmo() override;
+	UFUNCTION()
+	float GetMovementAccurency() { return MovementAccurency; };
+
+	UFUNCTION()
+	FVector GetTurretForwardVector() { return TurretMesh->GetForwardVector(); }
+
+	UFUNCTION()
+	void RotateTurretTo(FVector TargetPosition);
+
+	FVector GetEyesPosition(); 
 
 protected:
-	virtual void BeginPlay() override;
+	// move
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params|Patrol points" , Meta = (MakeEditWidget = true))
+	TArray<FVector> PatrollingPoints;
 
-	// camera
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	class USpringArmComponent* SpringArm;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	class UCameraComponent* Camera;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params|Accurency")
+	float MovementAccurency = 50;
 
 	// props
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
@@ -55,15 +61,9 @@ protected:
 	float TurretRotationInterpolationKey = 0.125f;
 
 	// controller
-	UPROPERTY()
-	class ATankPlayerController* TankController;
-
 	float moveBaseAxisValue = 0.0f;
 	float rotationBaseAxisValue = 0.0f;
 
 private:
 	void MoveAndRotationBase(float DeltaTime);
-
-	void RotationTurrel(float DeltaTime);
-
 };
