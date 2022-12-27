@@ -22,7 +22,7 @@ protected:
 	APawn* PlayerPawn;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Targeting")
-	float TargetingRange = 1000;
+	float TargetingRange = 2500;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Targeting")
 	float TargetingSpeed = 0.1f;
@@ -44,5 +44,7 @@ protected:
 	void RotateToPlayer();
 	bool IsPlayerInRange();
 	bool CanFire();
+
+	bool IsPlayerSeen();
 
 };
