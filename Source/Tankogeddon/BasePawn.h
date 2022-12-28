@@ -22,13 +22,15 @@ public:
 
 	void SetupCannon(TSubclassOf<class ACannon> NewRocketCannonClass, ERocketType NewRocketType = ERocketType::NonType, int32 NewAmmo = 0);
 
-protected:
 	virtual void BeginPlay() override;
 
 	virtual void ReloadAmmo();
 
-	void AddAmmo(int32 AmmoCount);
+	virtual void ChangeMainCannon();
 
+	virtual void AddAmmo(int32 AmmoCount);
+
+protected:
 	// Унаследовано через IScorable
 	virtual int32 GetScore() override;
 

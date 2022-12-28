@@ -33,6 +33,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Targeting")
 	float Accurency = 10;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Change Cannon Timer")
+	float ChangeCannonTimer = 8;
+
 	const FString BaseMeshPath = "StaticMesh'/Game/CSC/Meshes/SM_CSC_Tower1.SM_CSC_Tower1'";
 
 	const FString TurretMeshPath ="StaticMesh'/Game/CSC/Meshes/SM_CSC_Gun1.SM_CSC_Gun1'";

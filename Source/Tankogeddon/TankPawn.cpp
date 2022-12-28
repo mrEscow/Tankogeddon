@@ -48,24 +48,6 @@ void ATankPawn::RotationBase(float Value)
 	rotationBaseAxisValue = Value;
 }
 
-void ATankPawn::ChangeMainCannon()
-{
-	if (CannonClassSecond)
-	{
-		SetupCannon(CannonClassSecond, CannonRocketTypeSecond, Cannon->GetAllAmmo());
-	}
-
-}
-
-void  ATankPawn::ReloadAmmo()
-{
-	if (Cannon)
-	{
-		Cannon->ReloadAmmo();
-	}
-
-}
-
 void ATankPawn::BeginPlay()
 {
 	Super::BeginPlay();

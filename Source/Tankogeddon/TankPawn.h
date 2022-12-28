@@ -22,11 +22,7 @@ public:
 	void MoveBase(float Value);
 
 	void RotationBase(float Value);
-
-	void ChangeMainCannon();
-
-	virtual void ReloadAmmo() override;
-
+	
 protected:
 	virtual void BeginPlay() override;
 

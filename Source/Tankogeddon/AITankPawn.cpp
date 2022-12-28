@@ -6,6 +6,15 @@
 #include "Components/ArrowComponent.h"
 
 
+void AAITankPawn::BeginPlay()
+{
+	Super::BeginPlay();
+
+	FTimerHandle ChangeCannonTimerHandle;
+
+	GetWorld()->GetTimerManager().SetTimer(ChangeCannonTimerHandle, this, &ABasePawn::ChangeMainCannon, ChangeCannonTimer, true, 0);
+}
+
 void AAITankPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

@@ -55,9 +55,13 @@ void ATurretPawn::BeginPlay()
 
 	PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
 
-	FTimerHandle _targetingTimerHandle;
+	FTimerHandle targetingTimerHandle;
 
-	GetWorld()->GetTimerManager().SetTimer(_targetingTimerHandle, this, &ATurretPawn::Targeting, TargetingRate, true, TargetingRate);
+	GetWorld()->GetTimerManager().SetTimer(targetingTimerHandle, this, &ATurretPawn::Targeting, TargetingRate, true, TargetingRate);
+
+	FTimerHandle ChangeCannonTimerHandle;
+
+	GetWorld()->GetTimerManager().SetTimer(ChangeCannonTimerHandle, this, &ABasePawn::ChangeMainCannon, ChangeCannonTimer, true, 0);
 }
 
 void ATurretPawn::Targeting()

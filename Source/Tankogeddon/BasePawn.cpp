@@ -14,18 +14,26 @@ ABasePawn::ABasePawn()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	//SetActorEnableCollision(true);
+	bLockLocation = true;
+
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("RootComponent"));
 	RootComponent = BoxCollision;
 
+	//BoxCollision->SetCollisionProfileName(FName("OverlapAll"));
+	//BoxCollision->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
+	//BoxCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	//BoxCollision->SetGenerateOverlapEvents(true);
+
 	BoxCollision->SetCollisionProfileName(FName("BlockAll"));
-	BoxCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	BoxCollision->SetGenerateOverlapEvents(true);
 
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
 	BaseMesh->SetupAttachment(BoxCollision);
+	BaseMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	TurretMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretMesh"));
 	TurretMesh->SetupAttachment(BaseMesh);
+	TurretMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	CannonSetupPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("CannonSetupPoint"));
 	CannonSetupPoint->SetupAttachment(TurretMesh);
@@ -57,15 +65,15 @@ void ABasePawn::SetupCannon(TSubclassOf<ACannon> NewRocketCannonClass, ERocketTy
 		return;
 	}
 
-	if (CannonClass)
-	{
-		CannonClassSecond = CannonClass;
-		if (Cannon)
-		{
-			CannonRocketTypeSecond = Cannon->GetRocketType();
-		}
+	//if (CannonClass)
+	//{
+	//	CannonClassSecond = CannonClass;
+	//	if (Cannon)
+	//	{
+	//		CannonRocketTypeSecond = Cannon->GetRocketType();
+	//	}
 
-	}
+	//}
 
 	CannonClass = NewRocketCannonClass;
 
@@ -99,6 +107,23 @@ void ABasePawn::AddAmmo(int32 AmmoCount)
 		Cannon->AddAmmo(AmmoCount);
 		Cannon->ReloadAmmo();
 	}
+}
+
+void ABasePawn::ChangeMainCannon()
+{
+	UE_LOG(LogTemp, Warning, TEXT("ABasePawn::ChangeMainCannon!"));
+	if (CannonClassSecond)
+	{
+		TSubclassOf<ACannon> CannonClassTemp;
+
+		// bable
+		CannonClassTemp = CannonClass;
+		CannonClass = CannonClassSecond;
+		CannonClassSecond = CannonClassTemp;
+
+		SetupCannon(CannonClass, CannonRocketTypeSecond, Cannon->GetAllAmmo());
+	}
+
 }
 
 void ABasePawn::Fire()

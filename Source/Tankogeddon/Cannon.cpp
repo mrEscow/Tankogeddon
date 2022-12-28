@@ -31,6 +31,7 @@ ACannon::ACannon()
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Cannon mesh"));
 	Mesh->SetupAttachment(RootComponent);
+	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	ProjectileSpawnPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("Spawnpoint"));
 	ProjectileSpawnPoint->SetupAttachment(Mesh);
@@ -41,13 +42,15 @@ ACannon::ACannon()
 	ShootEffect->SetupAttachment(ProjectileSpawnPoint);
 	ShootEffect->SetAutoActivate(false);
 
-	AudioEffect = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioEffect"));
-	AudioEffect->SetupAttachment(sceeneCpm);
-	AudioEffect->SetAutoActivate(false);
+	AudioEffectRocket = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioEffectRocket"));
+	AudioEffectRocket->SetupAttachment(sceeneCpm);
+	AudioEffectRocket->SetAutoActivate(false);
 
-	Mesh->SetCollisionProfileName(FName("OverlapAll"));
-	Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	Mesh->SetGenerateOverlapEvents(true);
+	AudioEffectLaser = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioEffectLaser"));
+	AudioEffectLaser->SetupAttachment(sceeneCpm);
+	AudioEffectLaser->SetAutoActivate(false);
+
+
 }
 
 
@@ -228,6 +231,11 @@ void ACannon::FireTraceShut()
 	FVector start = ProjectileSpawnPoint->GetComponentLocation();
 	FVector end = ProjectileSpawnPoint->GetForwardVector() * FireRange + start;
 
+	if (AudioEffectLaser)
+	{
+		AudioEffectLaser->Play();
+	}
+
 	if (GetWorld()->LineTraceSingleByChannel(hitResult, start, end, ECollisionChannel::ECC_Visibility, traceParams))
 	{
 		DrawDebugLine(GetWorld(), start, hitResult.Location, FColor::Red, false, 50.0f, 0, 5);
@@ -357,9 +365,9 @@ void ACannon::ShootEffects()
 		ShootEffect->ActivateSystem();
 	}
 
-	if (AudioEffect)
+	if (AudioEffectRocket)
 	{
-		AudioEffect->Play();
+		AudioEffectRocket->Play();
 	}
 
 	if (GetOwner() && GetOwner() == GetWorld()->GetFirstPlayerController()->GetPawn())

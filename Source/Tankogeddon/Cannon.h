@@ -95,7 +95,10 @@ protected:
 	class UParticleSystemComponent* ShootEffect;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Effects")
-	class UAudioComponent* AudioEffect;
+	class UAudioComponent* AudioEffectRocket;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Effects")
+	class UAudioComponent* AudioEffectLaser;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
 	class UForceFeedbackEffect* ShootForceEffect;

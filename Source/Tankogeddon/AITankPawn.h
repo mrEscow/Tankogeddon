@@ -15,6 +15,8 @@ class TANKOGEDDON_API AAITankPawn : public ABasePawn
 	GENERATED_BODY()
 
 public:
+	virtual void BeginPlay() override;
+
 	virtual void Tick(float DeltaTime) override;
 
 	void MoveBase(float Value);
@@ -63,6 +65,9 @@ protected:
 	// controller
 	float moveBaseAxisValue = 0.0f;
 	float rotationBaseAxisValue = 0.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Change Cannon Timer")
+	float ChangeCannonTimer = 8;
 
 private:
 	void MoveAndRotationBase(float DeltaTime);

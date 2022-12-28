@@ -70,10 +70,11 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 		return;
 	}
 	
-	AActor* owner = GetOwner(); // cannom
+	AActor* owner = GetOwner(); // cannon
 	AActor* ownerByOwner = owner != nullptr ? owner->GetOwner() : nullptr; // turrel
+	AActor* ownerByOwnerByOwner = ownerByOwner != nullptr ? ownerByOwner->GetOwner() : nullptr; // root
 
-	if (OtherActor != owner && OtherActor != ownerByOwner) // if(not me)
+	if (OtherActor != owner && OtherActor != ownerByOwner && OtherActor != ownerByOwnerByOwner) // if(not me)
 	{
 		IDamageTaker* damageTakerActor = Cast<IDamageTaker>(OtherActor);
 
