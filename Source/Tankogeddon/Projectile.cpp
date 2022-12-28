@@ -36,6 +36,7 @@ AProjectile::AProjectile()
 	// Подписка на событие начала пересечения с другим объектом,
 	Mesh->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnMeshOverlapBegin);
 
+	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AProjectile::Start()
@@ -43,6 +44,8 @@ void AProjectile::Start()
 	GetWorld()->GetTimerManager().SetTimer(MovementTimerHandle, this, &AProjectile::Move, MoveRate, true, MoveRate);
 
 	GetWorld()->GetTimerManager().SetTimer(LiveTimerHandle, this, &AProjectile::ReturnPool, TimeLive, false);
+
+	Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 
 void AProjectile::ReturnPool()
@@ -52,6 +55,8 @@ void AProjectile::ReturnPool()
 	Score = 0;
 
 	GetWorld()->GetTimerManager().ClearTimer(MovementTimerHandle);
+
+	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	SetActorLocation(ProjectileHomePoint->GetComponentLocation());
 	SetActorRotation(ProjectileHomePoint->GetComponentRotation());
