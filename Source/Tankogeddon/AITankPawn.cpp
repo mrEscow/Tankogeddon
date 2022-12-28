@@ -6,6 +6,8 @@
 #include "Components/ArrowComponent.h"
 
 
+
+
 void AAITankPawn::BeginPlay()
 {
 	Super::BeginPlay();
@@ -31,6 +33,26 @@ void AAITankPawn::MoveBase(float Value)
 void AAITankPawn::RotationBase(float Value)
 {
 	rotationBaseAxisValue = Value;
+}
+
+TArray<FVector> AAITankPawn::GetPatrollingPoints() const
+{
+	TArray<FVector> points;
+
+	for (ATargetPoint* point : PatrollingPoints)
+	{
+
+		points.Add(point->GetActorLocation());
+
+	}
+
+	return points;
+
+}
+
+void AAITankPawn::SetPatrollingPoints(TArray<ATargetPoint*> NewPatrollingPoints)
+{
+	PatrollingPoints = NewPatrollingPoints;
 }
 
 void AAITankPawn::MoveAndRotationBase(float DeltaTime)

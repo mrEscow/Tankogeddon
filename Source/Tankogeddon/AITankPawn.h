@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "BasePawn.h"
+#include "Engine/TargetPoint.h"
 #include "AITankPawn.generated.h"
 
-/**
- * 
- */
+
+
 UCLASS()
 class TANKOGEDDON_API AAITankPawn : public ABasePawn
 {
@@ -24,7 +24,9 @@ public:
 	void RotationBase(float Value);
 
 	UFUNCTION()
-	TArray<FVector> GetPatrollingPoints() { return PatrollingPoints; };
+	TArray<FVector> GetPatrollingPoints() const;
+
+	void SetPatrollingPoints(TArray<ATargetPoint*> NewPatrollingPoints);
 
 	UFUNCTION()
 	float GetMovementAccurency() { return MovementAccurency; };
@@ -40,7 +42,7 @@ public:
 protected:
 	// move
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params|Patrol points" , Meta = (MakeEditWidget = true))
-	TArray<FVector> PatrollingPoints;
+	TArray<ATargetPoint*> PatrollingPoints{0};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params|Accurency")
 	float MovementAccurency = 50;

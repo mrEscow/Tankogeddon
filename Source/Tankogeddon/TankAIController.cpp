@@ -11,33 +11,23 @@ void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AITankPawn = Cast<AAITankPawn>(GetPawn());
-
-	if (!AITankPawn)
-	{
-		return;
-	}
-
-	PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
-
-	FVector pawnLocation = AITankPawn->GetActorLocation();
-
-	MovementAccurency = AITankPawn->GetMovementAccurency();
-
-	TArray<FVector> points = AITankPawn->GetPatrollingPoints();
-
-	for (FVector point : points)
-	{
-		PatrollingPoints.Add(point + pawnLocation);
-	}
-
-	CurrentPatrolPointIndex = 0;
+	Initialize();
 
 }
 
 void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (!AITankPawn)
+	{
+		Initialize();
+	}
+
+	if (!AITankPawn)
+	{
+		return;
+	}
 
 	AITankPawn->MoveBase(1.0f);
 
@@ -51,7 +41,17 @@ void ATankAIController::Tick(float DeltaTime)
 
 float ATankAIController::GetRotationgValue()
 {
-	FVector currentPoint = PatrollingPoints[CurrentPatrolPointIndex];
+	FVector currentPoint;
+
+	//if (PatrollingPoints.Num() == 0)
+	//{
+	//	currentPoint = AITankPawn->GetActorLocation();
+	//}
+	//else
+	//{
+	//	currentPoint = PatrollingPoints[CurrentPatrolPointIndex];
+	//}
+
 	FVector pawnLocation = AITankPawn->GetActorLocation();
 
 	if (FVector::Distance(currentPoint, pawnLocation) <= MovementAccurency)
@@ -147,6 +147,11 @@ void ATankAIController::Fire()
 
 bool ATankAIController::IsPlayerSeen()
 {
+	if (!PlayerPawn)
+	{
+		Initialize();
+	}
+
 	FVector playerPos = PlayerPawn->GetActorLocation();
 	FVector eyesPos = AITankPawn->GetEyesPosition();
 
@@ -171,4 +176,27 @@ bool ATankAIController::IsPlayerSeen()
 
 	return false;
 
+}
+
+void ATankAIController::Initialize()
+{
+	AITankPawn = Cast<AAITankPawn>(GetPawn());
+
+	if (AITankPawn)
+	{
+		PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
+
+		FVector pawnLocation = AITankPawn->GetActorLocation();
+
+		MovementAccurency = AITankPawn->GetMovementAccurency();
+
+		TArray<FVector> points = AITankPawn->GetPatrollingPoints();
+
+		for (FVector point : points)
+		{
+			PatrollingPoints.Add(point);
+		}
+
+		CurrentPatrolPointIndex = 0;
+	}
 }
