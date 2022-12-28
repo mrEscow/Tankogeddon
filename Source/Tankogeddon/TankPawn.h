@@ -3,13 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
+#include "BasePawn.h"
 #include "TankPawn.generated.h"
 
 class UStaticMeshComponent;
+class ACannon;
 
 UCLASS()
-class TANKOGEDDON_API ATankPawn : public APawn
+class TANKOGEDDON_API ATankPawn : public ABasePawn
 {
 	GENERATED_BODY()
 
@@ -18,34 +19,47 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	void MoveForward(float Value);
-	void RotationForward(float Value);
+	void MoveBase(float Value);
 
+	void RotationBase(float Value);
+	
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	UStaticMeshComponent* BodyMesh;
+	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	UStaticMeshComponent* TurretMesh;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	class UBoxComponent* BoxCollision;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	// camera
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	class USpringArmComponent* SpringArm;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	class UCameraComponent* Camera;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
+	// props
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float MoveSpeed = 100.0f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float RotationSpeed = 100.0f;
 
-	float targetForwardAxisValue = 0.0f;
-	float targetRotationAxisValue = 0.0f;
+	// interpolation
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InterpolationKey")
+	float BaseMoveInterpolationKey = 0.125f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InterpolationKey")
+	float BaseRotationInterpolationKey = 0.125f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InterpolationKey")
+	float TurretRotationInterpolationKey = 0.125f;
+
+	// controller
+	UPROPERTY()
+	class ATankPlayerController* TankController;
+
+	float moveBaseAxisValue = 0.0f;
+	float rotationBaseAxisValue = 0.0f;
 
 private:
-	void SetLocationAndRotation(float DeltaTime);
+	void MoveAndRotationBase(float DeltaTime);
+
+	void RotationTurrel(float DeltaTime);
+
 };
