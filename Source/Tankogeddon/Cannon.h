@@ -52,10 +52,10 @@ protected:
 
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-	float FireRate = 1; // частота стрельбы, сколько выстрелов в секунду делает наша пушка.
+	float FireRate = 5.0f; // частота стрельбы, сколько выстрелов в секунду делает наша пушка.
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-	float FireRange = 1000; // дистанция стрельбы
+	float FireRange = 2500.0f; // дистанция стрельбы
 
 	// тип и класс снаряда
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
@@ -81,7 +81,7 @@ protected:
 	int32 CurrentCountAmmo = 0; // количество снарядов
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params/Ammo")
-	int32 CountAmmo = 0; // общее количество снарядов
+	int32 CountAmmo = 50; // общее количество снарядов
 
 	// auto shuting
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Auto Shuting")
@@ -118,7 +118,7 @@ private:
 
 	bool isReloadWeapon = false; // идет ли перезарядка
 
-	bool isAutoShyting = false; // идет ли перезарядка
+	bool isAutoShyting = false; // идет ли автоматическая стрельба
 
 	virtual void BeginPlay() override;
 

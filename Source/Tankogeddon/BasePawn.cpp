@@ -29,7 +29,7 @@ ABasePawn::ABasePawn()
 
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
 	BaseMesh->SetupAttachment(BoxCollision);
-	BaseMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	BaseMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
 	TurretMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretMesh"));
 	TurretMesh->SetupAttachment(BaseMesh);
@@ -72,10 +72,12 @@ void ABasePawn::SetupCannon(TSubclassOf<ACannon> NewRocketCannonClass, ERocketTy
 	//	{
 	//		CannonRocketTypeSecond = Cannon->GetRocketType();
 	//	}
-
 	//}
 
-	CannonClass = NewRocketCannonClass;
+	if (CannonClass)
+	{
+		CannonClass = NewRocketCannonClass;
+	}
 
 	if (Cannon)
 	{

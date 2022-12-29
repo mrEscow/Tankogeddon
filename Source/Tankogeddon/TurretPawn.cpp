@@ -133,13 +133,13 @@ bool ATurretPawn::IsPlayerSeen()
 	{
 		if (hitResult.GetActor() == PlayerPawn)
 		{
-			DrawDebugLine(GetWorld(), eyesPos, hitResult.Location, FColor::Green, false, 0.5f, 0, 10);
+			//DrawDebugLine(GetWorld(), eyesPos, hitResult.Location, FColor::Green, false, 0.5f, 0, 10);
 
 			return true;
 		}
 	}
 
-	DrawDebugLine(GetWorld(), eyesPos, playerPos, FColor::Cyan, false, 0.5f, 0, 10);
+	//DrawDebugLine(GetWorld(), eyesPos, playerPos, FColor::Cyan, false, 0.5f, 0, 10);
 
 	return false;
 }
