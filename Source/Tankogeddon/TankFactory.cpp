@@ -62,12 +62,21 @@ void ATankFactory::Die(AActor* DamageMaker)
 		BuildingMesh->SetStaticMesh(BuildingMeshTemp);
 	}
 
-	HitCollider->Deactivate();
+	//HitCollider->Deactivate();
+
+	FTimerHandle loadTimer;
+
+	GetWorld()->GetTimerManager().SetTimer(spawnTimer, this, &ATankFactory::LoadSecondLevel, 5, false, 0);
 }
 
 void ATankFactory::DamageTaked(float DamageValue)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Factory %s taked damage:%f Health:%f"), *GetName(), DamageValue, HealthComponent->GetHealth());
+}
+
+void ATankFactory::LoadSecondLevel()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), "SecondLevel");
 }
 
 void ATankFactory::SpawnNewTank()

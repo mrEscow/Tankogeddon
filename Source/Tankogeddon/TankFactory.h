@@ -57,4 +57,6 @@ protected:
 
 	const FString BuildingMeshPathDead = "/Script/Engine.StaticMesh'/Game/BLENDER/TankFactory/dead/TankFactoryDead_RELISE.TankFactoryDead_RELISE'";
 
+private:
+	void LoadSecondLevel();
 };
