@@ -30,7 +30,7 @@ protected:
 
 
 protected:
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UStaticMeshComponent* BuildingMesh;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -50,5 +50,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn tanks params")
 	TArray<class ATargetPoint*> TankWayPoints;
+
+	FTimerHandle spawnTimer;
+
+	const FString BuildingMeshPathGood = "/Script/Engine.StaticMesh'/Game/BLENDER/TankFactory/good/TankFactory_RELISE.TankFactory_RELISE'";
+
+	const FString BuildingMeshPathDead = "/Script/Engine.StaticMesh'/Game/BLENDER/TankFactory/dead/TankFactoryDead_RELISE.TankFactoryDead_RELISE'";
 
 };

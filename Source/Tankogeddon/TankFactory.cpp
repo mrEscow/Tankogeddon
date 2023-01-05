@@ -29,13 +29,18 @@ ATankFactory::ATankFactory()
 	HealthComponent->OnDie.AddUObject(this, &ATankFactory::Die);
 	HealthComponent->OnDamaged.AddUObject(this, &ATankFactory::DamageTaked);
 
+	UStaticMesh* BuildingMeshTemp = LoadObject<UStaticMesh>(this, *BuildingMeshPathGood);
+	if (BuildingMeshTemp)
+	{
+		BuildingMesh->SetStaticMesh(BuildingMeshTemp);
+	}
+
 }
 
 void ATankFactory::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FTimerHandle spawnTimer;
 	GetWorld()->GetTimerManager().SetTimer(spawnTimer, this, &ATankFactory::SpawnNewTank, SpawnTankRate, true, SpawnTankRate);
 
 }
@@ -47,7 +52,17 @@ void ATankFactory::TakeDamage(FDamageData DamageData)
 
 void ATankFactory::Die(AActor* DamageMaker)
 {
-	Destroy();
+	//Destroy();
+
+	GetWorld()->GetTimerManager().ClearTimer(spawnTimer);
+
+	UStaticMesh* BuildingMeshTemp = LoadObject<UStaticMesh>(this, *BuildingMeshPathDead);
+	if (BuildingMeshTemp)
+	{
+		BuildingMesh->SetStaticMesh(BuildingMeshTemp);
+	}
+
+	HitCollider->Deactivate();
 }
 
 void ATankFactory::DamageTaked(float DamageValue)
