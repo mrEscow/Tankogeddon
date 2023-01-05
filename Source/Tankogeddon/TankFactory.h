@@ -51,6 +51,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn tanks params")
 	TArray<class ATargetPoint*> TankWayPoints;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn tanks params")
+	class AMapLoader* LinkedMapLoader;
+
 	FTimerHandle spawnTimer;
 
 	const FString BuildingMeshPathGood = "/Script/Engine.StaticMesh'/Game/BLENDER/TankFactory/good/TankFactory_RELISE.TankFactory_RELISE'";
@@ -59,4 +63,7 @@ protected:
 
 private:
 	void LoadSecondLevel();
+
+
+
 };

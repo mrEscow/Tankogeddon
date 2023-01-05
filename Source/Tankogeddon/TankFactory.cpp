@@ -8,6 +8,8 @@
 #include "Engine/TargetPoint.h"
 #include "AITankPawn.h"
 
+#include "MapLoader.h"
+
 
 ATankFactory::ATankFactory()
 {
@@ -41,6 +43,11 @@ void ATankFactory::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (LinkedMapLoader)
+	{
+		LinkedMapLoader->SetIsActivated(false);
+	}
+
 	GetWorld()->GetTimerManager().SetTimer(spawnTimer, this, &ATankFactory::SpawnNewTank, SpawnTankRate, true, SpawnTankRate);
 
 }
@@ -66,7 +73,7 @@ void ATankFactory::Die(AActor* DamageMaker)
 
 	FTimerHandle loadTimer;
 
-	GetWorld()->GetTimerManager().SetTimer(spawnTimer, this, &ATankFactory::LoadSecondLevel, 5, false, 0);
+	GetWorld()->GetTimerManager().SetTimer(spawnTimer, this, &ATankFactory::LoadSecondLevel, 1, false, 0);
 }
 
 void ATankFactory::DamageTaked(float DamageValue)
@@ -76,7 +83,15 @@ void ATankFactory::DamageTaked(float DamageValue)
 
 void ATankFactory::LoadSecondLevel()
 {
-	UGameplayStatics::OpenLevel(GetWorld(), "SecondLevel");
+	//UGameplayStatics::OpenLevel(GetWorld(), "SecondLevel");
+	//LinkedMapLoader
+
+	if (LinkedMapLoader)
+	{
+		LinkedMapLoader->SetIsActivated(true);
+		UE_LOG(LogTemp, Warning, TEXT("Factory DEAD MapLoader is Activ !!!"));
+	}
+
 }
 
 void ATankFactory::SpawnNewTank()
