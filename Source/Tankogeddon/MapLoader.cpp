@@ -4,6 +4,9 @@
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 
+#include "Components/BoxComponent.h"
+#include "Components/PointLightComponent.h"
+
 
 AMapLoader::AMapLoader()
 {
@@ -62,10 +65,6 @@ void AMapLoader::OnTriggerOverlapBegin(UPrimitiveComponent* OverlappedComp, AAct
 void AMapLoader::BeginPlay()
 {
 	Super::BeginPlay();
-
-	//ActivatedLight->ToggleVisibility();
-
-	//eactivatedLight->ToggleVisibility();
 
 	SetActiveLights();
 

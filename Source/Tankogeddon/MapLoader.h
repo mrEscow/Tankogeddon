@@ -1,10 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/BoxComponent.h"
-#include "Components/PointLightComponent.h"
+
 #include "GameFramework/Actor.h"
 #include "MapLoader.generated.h"
+
+class UPointLightComponent;
 
 UCLASS()
 class AMapLoader : public AActor
@@ -13,10 +14,10 @@ class AMapLoader : public AActor
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UStaticMeshComponent* GatesMesh;
+	class UStaticMeshComponent* GatesMesh;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UBoxComponent* TriggerCollider;
+	class UBoxComponent* TriggerCollider;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components|Point")
 	UPointLightComponent* ActivatedLight;
