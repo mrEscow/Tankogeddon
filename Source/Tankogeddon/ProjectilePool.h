@@ -26,8 +26,6 @@ public:
 
 	void Return(AProjectile* object);
 
-	//virtual ~AProjectilePool();
-
 protected:
 	virtual void BeginPlay() override;
 
@@ -41,17 +39,11 @@ protected:
 	TSubclassOf<class AProjectile> ProjectileClass2;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UArrowComponent* ProjectileSpawnPoint; // точка, где хранятся снаряды
+	UArrowComponent* PoolPoint; // точка, где хранятся снаряды
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	int32 PoolSize = 10;
 private:
-	//struct PoolRecord
-	//{
-	//	AProjectile* instance;
-	//	bool in_use = false;
-	//};
 
 	TArray<AProjectile*> Pool;
+
 
 };

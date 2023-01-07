@@ -14,16 +14,11 @@ ABasePawn::ABasePawn()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	//SetActorEnableCollision(true);
 	bLockLocation = true;
 
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("RootComponent"));
 	RootComponent = BoxCollision;
 
-	//BoxCollision->SetCollisionProfileName(FName("OverlapAll"));
-	//BoxCollision->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
-	//BoxCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	//BoxCollision->SetGenerateOverlapEvents(true);
 
 	BoxCollision->SetCollisionProfileName(FName("BlockAll"));
 
@@ -58,21 +53,12 @@ void ABasePawn::ReloadAmmo()
 	}
 }
 
-void ABasePawn::SetupCannon(TSubclassOf<ACannon> NewRocketCannonClass, ERocketType NewRocketType, int32 NewAmmo)
+void ABasePawn::SetupCannon(TSubclassOf<ACannon> NewRocketCannonClass, int32 NewAmmo)
 {
 	if (!NewRocketCannonClass)
 	{
 		return;
 	}
-
-	//if (CannonClass)
-	//{
-	//	CannonClassSecond = CannonClass;
-	//	if (Cannon)
-	//	{
-	//		CannonRocketTypeSecond = Cannon->GetRocketType();
-	//	}
-	//}
 
 	if (CannonClass)
 	{
@@ -91,8 +77,6 @@ void ABasePawn::SetupCannon(TSubclassOf<ACannon> NewRocketCannonClass, ERocketTy
 	Cannon = GetWorld()->SpawnActor<ACannon>(CannonClass, spawnParams);
 
 	Cannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-
-	Cannon->SetRocketType(NewRocketType);
 
 	Cannon->OnKill.AddUObject(this, &ABasePawn::ScoreTaked);
 
@@ -123,7 +107,7 @@ void ABasePawn::ChangeMainCannon()
 		CannonClass = CannonClassSecond;
 		CannonClassSecond = CannonClassTemp;
 
-		SetupCannon(CannonClass, CannonRocketTypeSecond, Cannon->GetAllAmmo());
+		SetupCannon(CannonClass, Cannon->GetAllAmmo());
 	}
 
 }

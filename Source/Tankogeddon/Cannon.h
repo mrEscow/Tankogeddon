@@ -57,20 +57,20 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 	float FireRange = 2500.0f; // дистанция стрельбы
 
+
+	// снаряд
+	UPROPERTY()
+	class AProjectile* Projectile;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fire params")
+	TSubclassOf<class AProjectile> ProjectileClass;
+
 	// тип и класс снаряда
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 	ECannonType Type = ECannonType::FireRocket; //тип пушки
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fire params")
 	ERocketType RocketType = ERocketType::NonType; //тип ракет
-
-
-	// снаряд
-	UPROPERTY()
-	class AProjectile* Projectile; 
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-	TSubclassOf<class AProjectile> ProjectileClass; 
 
 
 	// Ammo
@@ -124,7 +124,11 @@ private:
 
 	void Reload();
 
-	class AGameSingleton* GameSingleton;
+	class AProjectilePool* ProjectilePool;
+
+	void SetPool();
 
 	void ShootEffects();
+
+
 };

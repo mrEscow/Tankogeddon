@@ -36,32 +36,66 @@ AProjectile::AProjectile()
 	// Подписка на событие начала пересечения с другим объектом,
 	Mesh->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnMeshOverlapBegin);
 
+	// отключаем колизию
 	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	// отключаем видимость
+	Mesh->SetVisibility(false);
 }
 
-void AProjectile::Start()
+void AProjectile::Start(UArrowComponent* SpawnPoint, float Range)
 {
+	// Активируемся
+	SetActive(true);
+
+	// новые координаты 
+	SetActorLocation(SpawnPoint->GetComponentLocation());
+	SetActorRotation(SpawnPoint->GetComponentRotation());
+
+	// поехали!
 	GetWorld()->GetTimerManager().SetTimer(MovementTimerHandle, this, &AProjectile::Move, MoveRate, true, MoveRate);
 
+	// вычисляем время жизни
+	SetTimeLive(Range);
+
+	// запускаем таймер жизни
 	GetWorld()->GetTimerManager().SetTimer(LiveTimerHandle, this, &AProjectile::ReturnPool, TimeLive, false);
 
+	// включаем видимость
+	Mesh->SetVisibility(true);
+
+	// включаем колизию
 	Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
+
+
 
 void AProjectile::ReturnPool()
 {
 	OnKill.Clear();
-
 	Score = 0;
 
+	// стоп движение
 	GetWorld()->GetTimerManager().ClearTimer(MovementTimerHandle);
 
+	// если время жизни продолжается, останавливаем
+	if (GetWorld()->GetTimerManager().IsTimerActive(LiveTimerHandle))
+	{
+		GetWorld()->GetTimerManager().ClearTimer(LiveTimerHandle);
+	}
+
+	// отключаем колизию
 	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	SetActorLocation(ProjectileHomePoint->GetComponentLocation());
-	SetActorRotation(ProjectileHomePoint->GetComponentRotation());
+	// отключаем видимость
+	Mesh->SetVisibility(false);
 
-	IsActive = false;
+	// возвращаемся в пул
+	SetActorLocation(PoolPoint->GetComponentLocation());
+	SetActorRotation(PoolPoint->GetComponentRotation());
+
+	// диактивация
+	SetActive(false);
 }
 
 void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,

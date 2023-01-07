@@ -20,7 +20,7 @@ public:
 
 	void Fire();
 
-	void SetupCannon(TSubclassOf<class ACannon> NewRocketCannonClass, ERocketType NewRocketType = ERocketType::NonType, int32 NewAmmo = 0);
+	void SetupCannon(TSubclassOf<class ACannon> NewRocketCannonClass, int32 NewAmmo = 0);
 
 	virtual void BeginPlay() override;
 
@@ -70,8 +70,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo")
 	TSubclassOf<ACannon> CannonClassSecond;
-
-	ERocketType CannonRocketTypeSecond = ERocketType::NonType;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ammo")
 	class UArrowComponent* CannonSetupPoint;

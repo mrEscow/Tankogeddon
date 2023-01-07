@@ -23,9 +23,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo")
 	TSubclassOf<class ACannon> CannonClass; // тип пушки
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Type")
-	ERocketType Type = ERocketType::NonType; //тип пушки
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo")
 	int32 Ammo = 0; // количество снарядов
 

@@ -47,7 +47,7 @@ void AAmmoBox::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 		//CannonClass.GetDefaultObject()->setupProjectile(ProjectileClass);
 
 		//playerPawn->SetupCannon(CannonClass, ProjectileClass);
-		playerPawn->SetupCannon(CannonClass, Type, Ammo);
+		playerPawn->SetupCannon(CannonClass, Ammo);
 		//playerPawn->AddAmmo(Ammo);
 		Destroy();
 		//Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);

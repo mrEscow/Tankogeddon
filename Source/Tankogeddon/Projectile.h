@@ -25,15 +25,17 @@ public:
 public:
 	AProjectile();
 
-	void Start();
+	void Start(UArrowComponent* SpawnPoint, float Range);
 
-	// for pool
-	bool InActive() { return IsActive; }
-	void SetActive(bool Active) { IsActive = Active; }
-	//void SetType(ERocketType NewType) { Type = NewType; }
 	ERocketType GetType() { return Type; }
-	void SetTimeLive(float Range) { TimeLive = Range / MoveSpeed; }
-	void SetHomePoint(UArrowComponent* HomePoint) { ProjectileHomePoint = HomePoint; }
+
+	void SetType(ERocketType NewType) { Type = NewType; }
+
+	bool InActive() { return IsActive; }
+
+	void SetPoolPoint(UArrowComponent* NewPoolPoint) { PoolPoint = NewPoolPoint; }
+
+	void ReturnPool();
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
@@ -56,10 +58,10 @@ protected:
 private:
 	//for pool
 	FTimerHandle LiveTimerHandle;
+
 	float TimeLive = 10;
-	UArrowComponent* ProjectileHomePoint; // точка, где хран€тс€ снар€ды
-protected:
-	void ReturnPool();
+
+	UArrowComponent* PoolPoint; // точка, где хран€тс€ снар€ды
 
 protected:
 	UFUNCTION() // обнаружение столкновени€ с другими объектами.
@@ -76,5 +78,10 @@ private:
 	bool IsActive = false;
 
 	int32 Score = 0;
+
+private:
+	void SetTimeLive(float Range) { TimeLive = Range / MoveSpeed; }
+
+	void SetActive(bool Active) { IsActive = Active; }
 
 };
