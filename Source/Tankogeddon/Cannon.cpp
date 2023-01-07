@@ -208,7 +208,7 @@ void ACannon::FireTraceShut()
 
 	if (GetWorld()->LineTraceSingleByChannel(hitResult, start, end, ECollisionChannel::ECC_Visibility, traceParams))
 	{
-		DrawDebugLine(GetWorld(), start, hitResult.Location, FColor::Red, false, 50.0f, 0, 5);
+		DrawDebugLine(GetWorld(), start, hitResult.Location, FColor::Red, false, 2.0f, 0, LaserBold);
 
 		if (hitResult.GetActor())
 		{
@@ -234,7 +234,7 @@ void ACannon::FireTraceShut()
 	}
 	else
 	{
-		DrawDebugLine(GetWorld(), start, end, FColor::Yellow, false, 50.0f, 0, 5);
+		DrawDebugLine(GetWorld(), start, end, FColor::Yellow, false, 2.0f, 0, LaserBold);
 	}
 }
 

@@ -36,7 +36,7 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	class UArrowComponent* TankSpawnPoint;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	class UBoxComponent* HitCollider;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")

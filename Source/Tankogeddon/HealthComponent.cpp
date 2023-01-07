@@ -9,8 +9,6 @@ UHealthComponent::UHealthComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 
-
-
 }
 
 void UHealthComponent::TakeDamage(FDamageData DamageData)
@@ -61,6 +59,8 @@ void UHealthComponent::AddHealth(float AddiditionalHealthValue)
 
 void UHealthComponent::BeginPlay()
 {
+	Super::BeginPlay();
+
 	CurrentHealth = MaxHealth;
 
 	UE_LOG(LogTemp, Warning, TEXT("CurrentHealth: %f"), CurrentHealth);

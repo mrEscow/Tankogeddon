@@ -33,7 +33,7 @@ ABasePawn::ABasePawn()
 	CannonSetupPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("CannonSetupPoint"));
 	CannonSetupPoint->SetupAttachment(TurretMesh);
 
-	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Healthcomponent"));
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	HealthComponent->OnDie.AddUObject(this, &ABasePawn::Die);
 	HealthComponent->OnDamaged.AddUObject(this, &ABasePawn::DamageTaked);
 }

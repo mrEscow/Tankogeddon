@@ -4,6 +4,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
+#include "HealthComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/TargetPoint.h"
 #include "AITankPawn.h"
@@ -13,7 +14,9 @@
 
 ATankFactory::ATankFactory()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	//PrimaryActorTick.bCanEverTick = false;
+
+	PrimaryActorTick.bCanEverTick = true;
 
 	USceneComponent* sceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	RootComponent = sceneComponent;
@@ -27,15 +30,15 @@ ATankFactory::ATankFactory()
 	HitCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Hit collider"));
 	HitCollider->SetupAttachment(sceneComponent);
 
-	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Healthcomponent"));
-	HealthComponent->OnDie.AddUObject(this, &ATankFactory::Die);
-	HealthComponent->OnDamaged.AddUObject(this, &ATankFactory::DamageTaked);
-
 	UStaticMesh* BuildingMeshTemp = LoadObject<UStaticMesh>(this, *BuildingMeshPathGood);
 	if (BuildingMeshTemp)
 	{
 		BuildingMesh->SetStaticMesh(BuildingMeshTemp);
 	}
+
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+	HealthComponent->OnDie.AddUObject(this, &ATankFactory::Die);
+	HealthComponent->OnDamaged.AddUObject(this, &ATankFactory::DamageTaked);
 
 }
 

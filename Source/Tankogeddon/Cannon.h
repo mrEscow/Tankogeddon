@@ -72,6 +72,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fire params")
 	ERocketType RocketType = ERocketType::NonType; //тип ракет
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fire params/LaserBold")
+	float LaserBold = 18.0f; // толщина лазерного луча
+
 
 	// Ammo
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params/Ammo")
