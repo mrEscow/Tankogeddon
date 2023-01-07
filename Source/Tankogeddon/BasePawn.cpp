@@ -154,6 +154,7 @@ void ABasePawn::Die(AActor* DamageMaker)
 
 	if (Cannon)
 	{
+
 		Cannon->Destroy();
 	}
 

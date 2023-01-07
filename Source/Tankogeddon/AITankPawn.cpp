@@ -67,7 +67,7 @@ void AAITankPawn::MoveAndRotationBase(float DeltaTime)
 	ChangeRotation.Yaw += rotationBaseAxisValue * RotationSpeed * DeltaTime;
 	FRotator NewRotation = FMath::Lerp(ChangeRotation, CurrentRotation, BaseRotationInterpolationKey);
 
-	SetActorLocationAndRotation(NewPosition, NewRotation, false, 0, ETeleportType::None);
+	SetActorLocationAndRotation(NewPosition, NewRotation, true, 0, ETeleportType::None);
 
 }
 

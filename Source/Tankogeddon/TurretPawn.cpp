@@ -45,14 +45,6 @@ void ATurretPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FActorSpawnParameters params;
-
-	params.Owner = this;
-
-	Cannon = GetWorld()->SpawnActor<ACannon>(CannonClass, params);
-
-	Cannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-
 	PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
 
 	FTimerHandle targetingTimerHandle;
