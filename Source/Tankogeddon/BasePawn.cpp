@@ -147,7 +147,7 @@ void ABasePawn::Die(AActor* DamageMaker)
 
 void ABasePawn::DamageTaked(float DamageValue)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Pawn %s taked damage:%f Health:%f"), *GetName(), DamageValue, HealthComponent->GetHealth());
+	UE_LOG(LogTemp, Warning, TEXT("Pawn %s taked damage:%f Health:%f"), *GetName(), DamageValue, HealthComponent->GetCurrentHealth());
 }
 
 int32 ABasePawn::GetScore()

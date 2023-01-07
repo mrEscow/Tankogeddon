@@ -36,9 +36,14 @@ void UHealthComponent::TakeDamage(FDamageData DamageData)
 
 }
 
-float UHealthComponent::GetHealth() const
+float UHealthComponent::GetCurrentHealth() const
 {
 	return CurrentHealth;
+}
+
+float UHealthComponent::GetMaxHealth() const
+{
+	return MaxHealth;
 }
 
 float UHealthComponent::GetHealthState() const

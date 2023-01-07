@@ -81,7 +81,7 @@ void ATankFactory::Die(AActor* DamageMaker)
 
 void ATankFactory::DamageTaked(float DamageValue)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Factory %s taked damage:%f Health:%f"), *GetName(), DamageValue, HealthComponent->GetHealth());
+	UE_LOG(LogTemp, Warning, TEXT("Factory %s taked damage:%f Health:%f"), *GetName(), DamageValue, HealthComponent->GetCurrentHealth());
 }
 
 void ATankFactory::LoadSecondLevel()

@@ -10,6 +10,7 @@
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "DrawDebugHelpers.h"
+#include "HealthComponent.h"
 
 
 ATankPawn::ATankPawn()
@@ -46,6 +47,21 @@ void ATankPawn::MoveBase(float Value)
 void ATankPawn::RotationBase(float Value)
 {
 	rotationBaseAxisValue = Value;
+}
+
+float ATankPawn::GetCurrentHealth()
+{
+	return HealthComponent->GetCurrentHealth();
+}
+
+float ATankPawn::GetMaxHealth()
+{
+	return HealthComponent->GetMaxHealth();
+}
+
+float ATankPawn::GetHealthState()
+{
+	return HealthComponent->GetHealthState();
 }
 
 void ATankPawn::BeginPlay()
