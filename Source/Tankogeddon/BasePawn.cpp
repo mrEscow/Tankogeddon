@@ -14,7 +14,7 @@ ABasePawn::ABasePawn()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	bLockLocation = true;
+	//bLockLocation = false;
 
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("RootComponent"));
 	RootComponent = BoxCollision;
