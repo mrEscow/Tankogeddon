@@ -97,7 +97,6 @@ void ABasePawn::AddAmmo(int32 AmmoCount)
 
 void ABasePawn::ChangeMainCannon()
 {
-	UE_LOG(LogTemp, Warning, TEXT("ABasePawn::ChangeMainCannon!"));
 	if (CannonClassSecond)
 	{
 		TSubclassOf<ACannon> CannonClassTemp;

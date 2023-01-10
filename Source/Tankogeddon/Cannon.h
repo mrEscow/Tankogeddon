@@ -5,6 +5,7 @@
 
 
 #include "CoreMinimal.h"
+#include "ProjectilePool.h"
 #include "GameStruct.h"
 #include "GameFramework/Actor.h"
 #include "Cannon.generated.h"
@@ -29,6 +30,7 @@ public:
 	void Fire();
 	void AddAmmo(int32 AmmoCount);
 	void ReloadAmmo();
+
 	void AutoShyting();
 
 	int32 GetAllAmmo() { return CurrentCountAmmo + CountAmmo; }
@@ -88,7 +90,7 @@ protected:
 
 	// auto shuting
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Auto Shuting")
-	int AutoShutCount = 3; // количество снарядов
+	int32 AutoShutCount = 3; // количество снарядов
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Auto Shuting")
 	float AutoShutTme = 0.02f; // время повторного выстрела
@@ -127,11 +129,11 @@ private:
 
 	void Reload();
 
-	class AProjectilePool* ProjectilePool;
+	AProjectilePool* ProjectilePool;
 
 	void SetPool();
 
 	void ShootEffects();
 
-
+	int32 ShutCount;
 };

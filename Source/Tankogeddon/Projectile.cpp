@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+п»ї// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Projectile.h"
 #include "Components/StaticMeshComponent.h"
@@ -26,46 +26,48 @@ AProjectile::AProjectile()
 
 	USceneComponent* sceeneCpm = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	RootComponent = sceeneCpm;
+	RootComponent->SetMobility(EComponentMobility::Movable);
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
 
-	// Установка канала колизии
+	// РЈСЃС‚Р°РЅРѕРІРєР° РєР°РЅР°Р»Р° РєРѕР»РёР·РёРё
 	Mesh->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
 
-	// Подписка на событие начала пересечения с другим объектом,
+	// РџРѕРґРїРёСЃРєР° РЅР° СЃРѕР±С‹С‚РёРµ РЅР°С‡Р°Р»Р° РїРµСЂРµСЃРµС‡РµРЅРёСЏ СЃ РґСЂСѓРіРёРј РѕР±СЉРµРєС‚РѕРј,
 	Mesh->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnMeshOverlapBegin);
 
-	// отключаем колизию
+	// РѕС‚РєР»СЋС‡Р°РµРј РєРѕР»РёР·РёСЋ
 	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	// отключаем видимость
+	// РѕС‚РєР»СЋС‡Р°РµРј РІРёРґРёРјРѕСЃС‚СЊ
 	Mesh->SetVisibility(false);
 }
 
 void AProjectile::Start(UArrowComponent* SpawnPoint, float Range)
 {
-	// Активируемся
+	// РђРєС‚РёРІРёСЂСѓРµРјСЃСЏ
 	SetActive(true);
 
-	// новые координаты 
+	// РЅРѕРІС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ 
 	SetActorLocation(SpawnPoint->GetComponentLocation());
 	SetActorRotation(SpawnPoint->GetComponentRotation());
 
-	// поехали!
-	GetWorld()->GetTimerManager().SetTimer(MovementTimerHandle, this, &AProjectile::Move, MoveRate, true, MoveRate);
-
-	// вычисляем время жизни
-	SetTimeLive(Range);
-
-	// запускаем таймер жизни
-	GetWorld()->GetTimerManager().SetTimer(LiveTimerHandle, this, &AProjectile::ReturnPool, TimeLive, false);
-
-	// включаем видимость
+	// РІРєР»СЋС‡Р°РµРј РІРёРґРёРјРѕСЃС‚СЊ
 	Mesh->SetVisibility(true);
 
-	// включаем колизию
+	// РІРєР»СЋС‡Р°РµРј РєРѕР»РёР·РёСЋ
 	Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+	// РІС‹С‡РёСЃР»СЏРµРј РІСЂРµРјСЏ Р¶РёР·РЅРё
+	SetTimeLive(Range);
+
+	// Р·Р°РїСѓСЃРєР°РµРј С‚Р°Р№РјРµСЂ Р¶РёР·РЅРё
+	GetWorld()->GetTimerManager().SetTimer(LiveTimerHandle, this, &AProjectile::ReturnPool, TimeLive, false);
+
+	// РїРѕРµС…Р°Р»Рё!
+	GetWorld()->GetTimerManager().SetTimer(MovementTimerHandle, this, &AProjectile::Move, MoveRate, true, MoveRate);
+
 }
 
 
@@ -75,26 +77,26 @@ void AProjectile::ReturnPool()
 	OnKill.Clear();
 	Score = 0;
 
-	// стоп движение
+	// СЃС‚РѕРї РґРІРёР¶РµРЅРёРµ
 	GetWorld()->GetTimerManager().ClearTimer(MovementTimerHandle);
 
-	// если время жизни продолжается, останавливаем
+	// РµСЃР»Рё РІСЂРµРјСЏ Р¶РёР·РЅРё РїСЂРѕРґРѕР»Р¶Р°РµС‚СЃСЏ, РѕСЃС‚Р°РЅР°РІР»РёРІР°РµРј
 	if (GetWorld()->GetTimerManager().IsTimerActive(LiveTimerHandle))
 	{
 		GetWorld()->GetTimerManager().ClearTimer(LiveTimerHandle);
 	}
 
-	// отключаем колизию
+	// РѕС‚РєР»СЋС‡Р°РµРј РєРѕР»РёР·РёСЋ
 	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	// отключаем видимость
+	// РѕС‚РєР»СЋС‡Р°РµРј РІРёРґРёРјРѕСЃС‚СЊ
 	Mesh->SetVisibility(false);
 
-	// возвращаемся в пул
+	// РІРѕР·РІСЂР°С‰Р°РµРјСЃСЏ РІ РїСѓР»
 	SetActorLocation(PoolPoint->GetComponentLocation());
 	SetActorRotation(PoolPoint->GetComponentRotation());
 
-	// диактивация
+	// РґРёР°РєС‚РёРІР°С†РёСЏ
 	SetActive(false);
 }
 
@@ -144,14 +146,34 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("STOP!"));
+			//UE_LOG(LogTemp, Warning, TEXT("STOP!"));
 			Score = 0;
+
+			UPrimitiveComponent* mesh = Cast<UPrimitiveComponent>(OtherActor->GetRootComponent());
+
+			if (mesh)
+			{
+				if (mesh->IsSimulatingPhysics())
+				{
+					FVector forceVector = OtherActor->GetActorLocation() - GetActorLocation();
+					forceVector.Normalize();
+
+					EName KostochkaNmae = NAME_None;
+
+					bool isIgnorMassa = true;
+
+					// в—Џ РµСЃР»Рё С…РѕС‚РёРј РѕРґРёРЅ СЂР°Р· С‚РѕР»РєРЅСѓС‚СЊ СЌР»РµРјРµРЅС‚, Р»СѓС‡С€Рµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ AddImpulse().
+					mesh->AddImpulse(forceVector * PushForce, KostochkaNmae, isIgnorMassa);
+					// в—Џ РµСЃР»Рё РЅСѓР¶РЅРѕ РїРѕСЃС‚РѕСЏРЅРЅРѕРµ РІРѕР·РґРµР№СЃС‚РІРёРµ РЅР° РѕР±СЉРµРєС‚(РЅР°РїСЂРёРјРµСЂ, РґР»СЏ СЌС„С„РµРєС‚Р° РІРµС‚СЂР° РёР»Рё РіСЂР°РІРёС‚Р°С†РёРё), Р±РѕР»РµРµ РїРѕРґС…РѕРґСЏС‰РёРј Р±СѓРґРµС‚ AddForce().
+					//mesh->AddForce(forceVector * PushForce, NAME_None, true);
+				}
+			}
+
 			//OtherActor->Destroy();
 		}
 
 		ReturnPool();
 	}
-
 	
 }
 

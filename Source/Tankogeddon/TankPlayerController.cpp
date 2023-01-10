@@ -18,6 +18,8 @@ void ATankPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("ChangeMainCannon", EInputEvent::IE_Pressed, this, &ATankPlayerController::ChangeMainCannon);
 	InputComponent->BindAction("ReloadAmmo", EInputEvent::IE_Pressed, this, &ATankPlayerController::ReloadAmmo);
+
+	FInputActionBinding& action1 = InputComponent->BindAction("SetDestination", IE_Pressed, this, &ATankPlayerController::OnSetDestinationPressed);
 }
 
 void ATankPlayerController::Tick(float DeltaSeconds)
@@ -31,6 +33,8 @@ void ATankPlayerController::Tick(float DeltaSeconds)
 
 	FVector MouseDirection;
 	DeprojectMousePositionToWorld(MousePos, MouseDirection);
+
+	MousePosCrude = MousePos;
 
 	FVector PawnPosition = TankPawn->GetActorLocation();
 	MousePos.Z = PawnPosition.Z;
@@ -105,4 +109,8 @@ void  ATankPlayerController::ReloadAmmo()
 	{
 		TankPawn->ReloadAmmo();
 	}
+}
+
+void ATankPlayerController::OnSetDestinationPressed()
+{
 }

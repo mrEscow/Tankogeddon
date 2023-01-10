@@ -8,7 +8,7 @@
 #include "Engine/Engine.h"
 #include "DrawDebugHelpers.h"
 
-#include "ProjectilePool.h"
+
 #include "GameSingleton.h"
 #include "Engine/World.h"
 #include "DamageTaker.h"
@@ -29,8 +29,6 @@ ACannon::ACannon()
 
 	ProjectileSpawnPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("Spawnpoint"));
 	ProjectileSpawnPoint->SetupAttachment(Mesh);
-
-	SetPool();
 
 	ShootEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ShootEffect"));
 	ShootEffect->SetupAttachment(ProjectileSpawnPoint);
@@ -69,6 +67,8 @@ void ACannon::Fire()
 			}
 
 			CurrentCountAmmo--;
+
+			ShutCount = AutoShutCount;
 
 			AutoShyting();
 		}
@@ -112,7 +112,7 @@ void ACannon::AddAmmo(int32 AmmoCount)
 
 void ACannon::AutoShyting()
 {
-	if (AutoShutCount > 0)
+	if (ShutCount > 0)
 	{
 		isAutoShyting = true;
 
@@ -128,7 +128,7 @@ void ACannon::AutoShyting()
 
 		FireProjectileShut();
 
-		AutoShutCount--;
+		ShutCount--;
 
 		// повтор
 		GetWorld()->GetTimerManager().SetTimer(AutomaticShootingTimerHandle, this, &ACannon::AutoShyting, AutoShutTme, true);
@@ -147,8 +147,8 @@ void ACannon::AutoShyting()
 			GetWorld()->GetTimerManager().ClearTimer(AutomaticShootingTimerHandle);
 		}
 
-		// возвращаем количество выстрелов
-		AutoShutCount = 3;
+		//// возвращаем количество выстрелов
+		//ShutCount = 3;
 
 		isAutoShyting = false;
 	}
@@ -291,6 +291,7 @@ void ACannon::ReloadAmmo()
 	
 }
 
+
 bool ACannon::IsReadyToFire()
 {
 	if (CurrentCountAmmo == 0)
@@ -305,17 +306,17 @@ bool ACannon::IsReadyToFire()
 
 	if (isReloadWeapon)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, "Reload Ammo! Wait!");
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, "Reload Ammo! Wait!");
 	}
 
 	if (!ReadyToFire)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, "Reload Cannon! Wait!");
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, "Reload Cannon! Wait!");
 	}
 
 	if (isAutoShyting)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, "Auto Shuting! Wait!");
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Cyan, "Auto Shuting! Wait!");
 	}
 		
 	return ReadyToFire  && CurrentCountAmmo > 0 && !isReloadWeapon && !isAutoShyting;
@@ -371,6 +372,8 @@ void ACannon::ShootEffects()
 void ACannon::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SetPool();
 
 	Reload();
 

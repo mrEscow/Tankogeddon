@@ -25,7 +25,7 @@ public:
 public:
 	AProjectile();
 
-	void Start(UArrowComponent* SpawnPoint, float Range);
+	virtual void Start(UArrowComponent* SpawnPoint, float Range);
 
 	ERocketType GetType() { return Type; }
 
@@ -51,11 +51,14 @@ protected:
 	float MoveRate = 0.005f; // — частота обновления позиции снаряда в секундах
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
-	float Damage = 1; // повреждения, которые будет наносить снаряд при попадании.
+	float Damage = 1; // повреждения, которые будет наносить снаряд при попадании
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
+	float PushForce = 1000; // будет воздействовать на объекты при столкновении
 
 	FTimerHandle MovementTimerHandle;
 
-private:
+protected:
 	//for pool
 	FTimerHandle LiveTimerHandle;
 
@@ -72,14 +75,14 @@ protected:
 	virtual void CollisionWith(class AActor* OtherActor);
 
 	UFUNCTION()
-	void Move();
+	virtual void Move();
 
-private:
+protected:
 	bool IsActive = false;
 
 	int32 Score = 0;
 
-private:
+protected:
 	void SetTimeLive(float Range) { TimeLive = Range / MoveSpeed; }
 
 	void SetActive(bool Active) { IsActive = Active; }

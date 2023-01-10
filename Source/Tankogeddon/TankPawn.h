@@ -23,6 +23,7 @@ public:
 
 	void RotationBase(float Value);
 
+	// GUI
 	UFUNCTION(BlueprintPure)
 	float GetCurrentHealth();
 

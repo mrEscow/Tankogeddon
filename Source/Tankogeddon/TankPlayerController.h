@@ -21,7 +21,9 @@ public:
 	virtual void SetupInputComponent() override;
 	virtual void Tick(float DeltaSeconds) override;
 public:
-	FVector GetMousePosition() { return MousePos; };
+	FVector GetMousePosition() { return MousePos; }
+
+	FVector GetMousePositionCrude() { return MousePosCrude; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -37,4 +39,9 @@ protected:
 	void ReloadAmmo();
 
 	FVector MousePos;
+
+protected:
+	void OnSetDestinationPressed();
+
+	FVector MousePosCrude;
 };
