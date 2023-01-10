@@ -24,9 +24,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UPhysicsComponent* PhysicsComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	UParticleSystemComponent* TrailEffect;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float MoveAccurency = 10;
 

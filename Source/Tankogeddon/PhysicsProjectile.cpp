@@ -17,9 +17,8 @@ APhysicsProjectile::APhysicsProjectile()
 
 	RootComponent->SetMobility(EComponentMobility::Movable);
 
-	TrailEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Traileffect"));
-	TrailEffect->SetMobility(EComponentMobility::Movable);
-	TrailEffect->SetupAttachment(RootComponent);
+	// отключаем видимость
+	TrailEffect->SetVisibility(false);
 
 	PhysicsComponent = CreateDefaultSubobject<UPhysicsComponent>(TEXT("PhysicsComponent"));
 
@@ -45,76 +44,26 @@ void APhysicsProjectile::Start(UArrowComponent* SpawnPoint, float Range)
 	GetWorld()->GetGameViewport()->GetViewportSize(ViewportSize2D);
 	GetWorld()->GetGameViewport()->GetMousePosition(MousePos2D);
 
-	UE_LOG(LogTemp, Warning, TEXT("ViewportSize2D value is: %s"), *ViewportSize2D.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("MousePos2D     value is: %s"), *MousePos2D.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("ViewportSize2D value is: %s"), *ViewportSize2D.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("MousePos2D     value is: %s"), *MousePos2D.ToString());
 
 	float DistanceToMouse = FVector2D::Distance(ViewportSize2D / 2, MousePos2D);
 
-	UE_LOG(LogTemp, Warning, TEXT("DistanceToMouse: %f. "), DistanceToMouse);
+	//UE_LOG(LogTemp, Warning, TEXT("DistanceToMouse: %f. "), DistanceToMouse);
 
 
 	FVector forward = GetActorForwardVector();  // направление
 
-	//FVector MousePos;
-	//FRotator currentRotation;
-	//FVector MouseDirection;
-	//DeprojectMousePositionToWorld(MousePos, MouseDirection);
-
-	//AActor* owner = GetOwner(); // cannon
-	//AActor* ownerByOwner = owner != nullptr ? owner->GetOwner() : nullptr; // turrel
-
-	//APlayerController* PC = GetWorld()->GetFirstPlayerController();
-	//if (PC)
-	//{
-	//	ATankPlayerController* TPC = Cast<ATankPlayerController>(PC);
-	//	if (TPC)
-	//	{
-	//		MousePos = TPC->GetMousePositionCrude();
-
-	//		//MousePos = TPC->GetMousePosition();
-
-	//		//currentRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), MousePos);
-	//		//FRotator turretRotation = GetActorRotation();
-	//		//currentRotation.Pitch = turretRotation.Pitch;
-	//		//currentRotation.Roll = turretRotation.Roll;
-
-	//		//FRotator NewRotation = FMath::Lerp(turretRotation, currentRotation, TurretRotationInterpolationKey);
-	//		//TurretMesh->SetWorldRotation(NewRotation);
-
-	//		//FVector turretPos = GetActorLocation();
-	//		//DrawDebugLine(GetWorld(), turretPos, MousePos, FColor::Green, false, 2.0f, 0, 5);
-	//	}
-
-	//}
-
-	
-	//float x = FVector::DistXY(GetActorLocation(), MousePos);
-
-	//float d = sqrt(pow(MousePos.X - GetActorLocation().X, 2) + pow(MousePos.Y - GetActorLocation().Y, 2) + pow(0 - 0, 2) * 1.0);
-
-	//GetActorLocation
-	
-	//GetDistance()
-	//float x = GetDistance()
-
-	//UE_LOG(LogTemp, Warning, TEXT("ForwardV         value is: %s"), *forward.ToString());
-	//UE_LOG(LogTemp, Warning, TEXT("GetActorLocation value is: %s"), *GetActorLocation().ToString());
-	//UE_LOG(LogTemp, Warning, TEXT("MousePos         value is: %s"), *MousePos.ToString());
-	//MousePos.Z =  GetActorLocation().Z;
-	//FVector temp = MousePos - GetActorLocation();
-	
-	//FVector::
-	//UE_LOG(LogTemp, Warning, TEXT("Mouse-ActorLocatiation is: %s"), *temp.ToString());
-
-	//float Dist = FVector::DistXY(MousePos , GetActorLocation() );
-
-	//UE_LOG(LogTemp, Warning, TEXT("GetActorLocation value is: %s"), *GetActorLocation().ToString());
-	//UE_LOG(LogTemp, Warning, TEXT("MousePos         value is: %s"), *MousePos.ToString());
-	//UE_LOG(LogTemp, Warning, TEXT("X: %f. "), Dist);
-	//UE_LOG(LogTemp, Warning, TEXT("X: %f. "), d);
-
 
 	MoveVector =  forward * DistanceToMouse * TrajectorySimulationSpeed; // TrajectorySimulationSpeed = 1.5
+
+	float g = 9.8f;
+
+	float SightAngle = 0.5 * FMath::Asin(DistanceToMouse * g / (TrajectorySimulationSpeed * TrajectorySimulationSpeed));
+
+	MoveVector.Z = SightAngle;
+
+	UE_LOG(LogTemp, Warning, TEXT("SightAngle  value is: %f"), SightAngle);
 
 	CurrentTrajectory = PhysicsComponent->GenerateTrajectory(
 
@@ -142,6 +91,9 @@ void APhysicsProjectile::Start(UArrowComponent* SpawnPoint, float Range)
 
 	// включаем видимость
 	Mesh->SetVisibility(true);
+
+	// отключаем видимость
+	TrailEffect->SetVisibility(false);
 
 	// включаем колизию
 	Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
@@ -171,6 +123,9 @@ void APhysicsProjectile::Move()
 
 		if (TragectoryPointIndex >= CurrentTrajectory.Num())
 		{
+			// отключаем видимость
+			TrailEffect->SetVisibility(false);
+
 			ReturnPool();
 			//Destroy();
 		}

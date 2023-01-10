@@ -41,6 +41,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	class UStaticMeshComponent* Mesh; // 3D-модель снаряда
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	class UParticleSystemComponent* TrailEffect; 
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Type")
 	ERocketType Type = ERocketType::NonType; //тип пушки
 

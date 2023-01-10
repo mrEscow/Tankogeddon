@@ -8,6 +8,8 @@
 #include "Scorable.h"
 #include "BasePawn.h"
 
+#include "Particles/ParticleSystemComponent.h"
+
 
 void AProjectile::TakeScore(int32 NewScore)
 {
@@ -31,6 +33,13 @@ AProjectile::AProjectile()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
 
+	TrailEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Traileffect"));
+	TrailEffect->SetMobility(EComponentMobility::Movable);
+	TrailEffect->SetupAttachment(RootComponent);
+
+	// отключаем видимость
+	TrailEffect->SetVisibility(false);
+
 	// Установка канала колизии
 	Mesh->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
 
@@ -52,6 +61,9 @@ void AProjectile::Start(UArrowComponent* SpawnPoint, float Range)
 	// новые координаты 
 	SetActorLocation(SpawnPoint->GetComponentLocation());
 	SetActorRotation(SpawnPoint->GetComponentRotation());
+
+	// включаем видимость
+	TrailEffect->SetVisibility(true);
 
 	// включаем видимость
 	Mesh->SetVisibility(true);
@@ -91,6 +103,9 @@ void AProjectile::ReturnPool()
 
 	// отключаем видимость
 	Mesh->SetVisibility(false);
+
+	// отключаем видимость
+	TrailEffect->SetVisibility(false);
 
 	// возвращаемся в пул
 	SetActorLocation(PoolPoint->GetComponentLocation());
