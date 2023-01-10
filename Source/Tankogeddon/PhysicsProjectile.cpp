@@ -53,7 +53,7 @@ void APhysicsProjectile::Start(UArrowComponent* SpawnPoint, float Range)
 	UE_LOG(LogTemp, Warning, TEXT("DistanceToMouse: %f. "), DistanceToMouse);
 
 
-	FVector forward = GetActorForwardVector();
+	FVector forward = GetActorForwardVector();  // направление
 
 	//FVector MousePos;
 	//FRotator currentRotation;
@@ -114,7 +114,7 @@ void APhysicsProjectile::Start(UArrowComponent* SpawnPoint, float Range)
 	//UE_LOG(LogTemp, Warning, TEXT("X: %f. "), d);
 
 
-	MoveVector =  forward * DistanceToMouse * TrajectorySimulationSpeed;
+	MoveVector =  forward * DistanceToMouse * TrajectorySimulationSpeed; // TrajectorySimulationSpeed = 1.5
 
 	CurrentTrajectory = PhysicsComponent->GenerateTrajectory(
 
