@@ -126,6 +126,84 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 		return;
 	}
 	
+	if (IsExplode)
+	{
+		Explode();
+	}
+	else
+	{
+		BumpInto(OtherActor);
+	}
+
+	ReturnPool();
+}
+
+void AProjectile::CollisionWith(AActor* OtherActor)
+{
+	if (OtherActor)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
+
+		ReturnPool();
+	}
+}
+
+void AProjectile::Move()
+{
+	FVector nextPosition = GetActorLocation() + GetActorForwardVector() * MoveSpeed * MoveRate;
+
+	SetActorLocation(nextPosition);
+
+}
+
+void AProjectile::Explode()
+{
+	FVector startPos = GetActorLocation();
+	FVector endPos = startPos + FVector(0.1f);
+
+	FCollisionShape Shape = FCollisionShape::MakeSphere(ExplodeRadius);
+	FCollisionQueryParams params = FCollisionQueryParams::DefaultQueryParam;
+	params.AddIgnoredActor(this);
+	params.bTraceComplex = true;
+	params.TraceTag = "Explode Trace";
+
+	TArray<FHitResult> AttackHit;
+
+	FQuat Rotation = FQuat::Identity;
+
+	bool sweepResult = GetWorld()->SweepMultiByChannel
+	(
+		AttackHit,
+		startPos,
+		endPos,
+		Rotation,
+		ECollisionChannel::ECC_Visibility,
+		Shape,
+		params
+	);
+
+	GetWorld()->DebugDrawTraceTag = "Explode Trace";
+
+	if (sweepResult)
+	{
+		for (FHitResult hitResult : AttackHit)
+		{
+			AActor* OtherActor = hitResult.GetActor();
+
+			if (!OtherActor)
+			{
+				continue;
+			}
+
+			BumpInto(OtherActor);
+
+		}
+	}
+
+}
+
+void AProjectile::BumpInto(AActor* OtherActor)
+{
 	AActor* owner = GetOwner(); // cannon
 	AActor* ownerByOwner = owner != nullptr ? owner->GetOwner() : nullptr; // turrel
 	AActor* ownerByOwnerByOwner = ownerByOwner != nullptr ? ownerByOwner->GetOwner() : nullptr; // root
@@ -183,29 +261,7 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 					//mesh->AddForce(forceVector * PushForce, NAME_None, true);
 				}
 			}
-
-			//OtherActor->Destroy();
 		}
-
-		ReturnPool();
 	}
-	
-}
-
-void AProjectile::CollisionWith(AActor* OtherActor)
-{
-	if (OtherActor)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
-
-		ReturnPool();
-	}
-}
-
-void AProjectile::Move()
-{
-	FVector nextPosition = GetActorLocation() + GetActorForwardVector() * MoveSpeed * MoveRate;
-
-	SetActorLocation(nextPosition);
 
 }

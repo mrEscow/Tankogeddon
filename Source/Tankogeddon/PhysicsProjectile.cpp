@@ -126,8 +126,9 @@ void APhysicsProjectile::Move()
 			// отключаем видимость
 			TrailEffect->SetVisibility(false);
 
+			Explode();
+
 			ReturnPool();
-			//Destroy();
 		}
 		else
 		{

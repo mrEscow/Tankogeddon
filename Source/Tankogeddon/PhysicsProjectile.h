@@ -20,7 +20,7 @@ public:
 protected:
 	virtual void Move() override;
 
-protected:
+	protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UPhysicsComponent* PhysicsComponent;
 

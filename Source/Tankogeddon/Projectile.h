@@ -57,7 +57,16 @@ protected:
 	float Damage = 1; // повреждения, которые будет наносить снаряд при попадании
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
+	float PushImpulse = 1000; // будет воздействовать на объекты при столкновении
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
 	float PushForce = 1000; // будет воздействовать на объекты при столкновении
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
+	bool IsExplode = true; // Взрыв будет
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
+	float ExplodeRadius = 150; // будет воздействовать на объекты при столкновении
 
 	FTimerHandle MovementTimerHandle;
 
@@ -89,5 +98,9 @@ protected:
 	void SetTimeLive(float Range) { TimeLive = Range / MoveSpeed; }
 
 	void SetActive(bool Active) { IsActive = Active; }
+
+	virtual void Explode();
+
+	virtual void BumpInto(AActor* OtherActor);
 
 };
