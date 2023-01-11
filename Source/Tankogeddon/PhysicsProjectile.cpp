@@ -10,6 +10,9 @@
 
 #include "TankPlayerController.h"
 
+#include "TankPawn.h"
+#include "TurretPawn.h"
+
 
 APhysicsProjectile::APhysicsProjectile()
 {
@@ -32,7 +35,6 @@ void APhysicsProjectile::Start(UArrowComponent* SpawnPoint, float Range)
 	// новые координаты 
 	SetActorLocation(SpawnPoint->GetComponentLocation());
 	SetActorRotation(SpawnPoint->GetComponentRotation());
-
 
 	FVector2D ViewportSize2D;
 	FVector2D MousePos2D;

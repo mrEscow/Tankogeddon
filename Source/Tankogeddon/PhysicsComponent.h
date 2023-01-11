@@ -19,4 +19,9 @@ protected:
 public:
 	TArray<FVector> GenerateTrajectory(FVector StartPos, FVector Velocity, float MaxTime, float TimeStep, float MinZValue = 0);
 
+	TArray<FVector> GenerateTrajectoryBezie2P(FVector StartPos, FVector EndPos, float Time, float TimeStep);
+
+private:
+	FVector GetPosBezie2P(FVector P0, FVector P1, FVector P2, float Time);
+
 };

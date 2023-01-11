@@ -107,12 +107,20 @@ bool ATurretPawn::CanFire()
 
 	FVector targetingDir = TurretMesh->GetForwardVector();
 
+	targetingDir.Z = 0;
+
 	FVector dirToPlayer = PlayerPawn->GetActorLocation() - GetActorLocation();
+	dirToPlayer.Z = 0;
 	dirToPlayer.Normalize();
 
 	float aimAngle = FMath::RadiansToDegrees(acosf(FVector::DotProduct(targetingDir, dirToPlayer))); // math
 
-	return aimAngle <= Accurency;
+	//UE_LOG(LogTemp, Warning, TEXT("TURRET AimAngle  value is: %f"), aimAngle);
+	//UE_LOG(LogTemp, Warning, TEXT("RRotation().Yaw  value is: %f"), TurretMesh->GetRelativeRotation().Pitch);
+
+	float Pitch = TurretMesh->GetRelativeRotation().Pitch;
+
+	return (aimAngle - Pitch) <= Accurency;
 }
 
 bool ATurretPawn::IsPlayerSeen()
