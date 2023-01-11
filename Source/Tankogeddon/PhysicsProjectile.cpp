@@ -58,7 +58,7 @@ void APhysicsProjectile::Start(UArrowComponent* SpawnPoint, float Range)
 
 	float SightAngle = 0.5 * FMath::Asin(DistanceToMouse * g / (TrajectorySimulationSpeed * TrajectorySimulationSpeed));
 
-	MoveVector.Z = SightAngle;
+	//MoveVector.Z = SightAngle;
 
 	UE_LOG(LogTemp, Warning, TEXT("SightAngle  value is: %f"), SightAngle);
 

@@ -75,7 +75,7 @@ void AProjectile::Start(UArrowComponent* SpawnPoint, float Range)
 	SetTimeLive(Range);
 
 	// запускаем таймер жизни
-	GetWorld()->GetTimerManager().SetTimer(LiveTimerHandle, this, &AProjectile::ReturnPool, TimeLive, false);
+	GetWorld()->GetTimerManager().SetTimer(LiveTimerHandle, this, &AProjectile::TimeLiveOut, TimeLive, false);
 
 	// поехали!
 	GetWorld()->GetTimerManager().SetTimer(MovementTimerHandle, this, &AProjectile::Move, MoveRate, true, MoveRate);
@@ -275,5 +275,16 @@ void AProjectile::BumpInto(AActor* OtherActor)
 			}
 		}
 	}
+
+}
+
+void AProjectile::TimeLiveOut()
+{
+	if (IsExplode)
+	{
+		Explode();
+	}
+
+	ReturnPool();
 
 }

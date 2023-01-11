@@ -103,4 +103,7 @@ protected:
 
 	virtual void BumpInto(AActor* OtherActor);
 
+private:
+	void TimeLiveOut();
+
 };
