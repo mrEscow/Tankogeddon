@@ -98,18 +98,22 @@ void AProjectile::ReturnPool()
 		GetWorld()->GetTimerManager().ClearTimer(LiveTimerHandle);
 	}
 
+	// отключаем видимость
+	TrailEffect->SetVisibility(false);
+
 	// отключаем колизию
 	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	// отключаем видимость
 	Mesh->SetVisibility(false);
 
-	// отключаем видимость
-	TrailEffect->SetVisibility(false);
-
 	// возвращаемся в пул
-	SetActorLocation(PoolPoint->GetComponentLocation());
-	SetActorRotation(PoolPoint->GetComponentRotation());
+	if (PoolPoint)
+	{
+		SetActorLocation(PoolPoint->GetComponentLocation());
+		SetActorRotation(PoolPoint->GetComponentRotation());
+	}
+
 
 	// диактивация
 	SetActive(false);
@@ -119,23 +123,24 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 									 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 									 bool bFromSweep, const FHitResult& SweepResult )
 {
-	AActor* Projectile = Cast<AProjectile>(OtherActor);
+	AActor* owner = GetOwner(); // cannon
+	AActor* ownerByOwner = owner != nullptr ? owner->GetOwner() : nullptr; // turrel
+	AActor* ownerByOwnerByOwner = ownerByOwner != nullptr ? ownerByOwner->GetOwner() : nullptr; // root
 
-	if (Projectile)
+	if (OtherActor != owner && OtherActor != ownerByOwner && OtherActor != ownerByOwnerByOwner) // if(not me)
 	{
-		return;
-	}
-	
-	if (IsExplode)
-	{
-		Explode();
-	}
-	else
-	{
-		BumpInto(OtherActor);
+		if (IsExplode)
+		{
+			Explode();
+		}
+		else
+		{
+			BumpInto(OtherActor);
+		}
+
+		ReturnPool();
 	}
 
-	ReturnPool();
 }
 
 void AProjectile::CollisionWith(AActor* OtherActor)
@@ -195,6 +200,13 @@ void AProjectile::Explode()
 				continue;
 			}
 
+			AActor* Projectile = Cast<AProjectile>(OtherActor);
+
+			if (Projectile)
+			{
+				continue;
+			}
+
 			BumpInto(OtherActor);
 
 		}
@@ -235,7 +247,7 @@ void AProjectile::BumpInto(AActor* OtherActor)
 		{
 			Score = scorobleActor->GetScore();
 			TakeScore(Score);
-			OtherActor->Destroy();
+			//OtherActor->Destroy();
 		}
 		else
 		{

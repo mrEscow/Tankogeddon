@@ -24,6 +24,7 @@ AProjectile* AProjectilePool::Get(TSubclassOf<class AProjectile> ProjectileClass
 	{
 		if (!Projectile->InActive()  && Projectile->GetType() == RocketType)
 		{
+			Projectile->SetPoolPoint(PoolPoint);
 			return Projectile;
 		}
 	}

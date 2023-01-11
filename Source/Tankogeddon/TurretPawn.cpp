@@ -19,7 +19,28 @@ ATurretPawn::ATurretPawn()
 
 	TurretMesh->SetupAttachment(BaseMesh, "ADD_Parts_Here_Socket");
 
-	UStaticMesh * turretMeshTemp = LoadObject<UStaticMesh>(this, *TurretMeshPath);
+}
+
+void ATurretPawn::BeginPlay()
+{
+	Super::BeginPlay();
+
+	PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
+
+	FTimerHandle targetingTimerHandle;
+
+	GetWorld()->GetTimerManager().SetTimer(targetingTimerHandle, this, &ATurretPawn::Targeting, TargetingRate, true, TargetingRate);
+
+	FTimerHandle ChangeCannonTimerHandle;
+
+	GetWorld()->GetTimerManager().SetTimer(ChangeCannonTimerHandle, this, &ABasePawn::ChangeMainCannon, ChangeCannonTimer, true, 0);
+}
+
+void ATurretPawn::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	UStaticMesh* turretMeshTemp = LoadObject<UStaticMesh>(this, *TurretMeshPath);
 	if (turretMeshTemp)
 	{
 		TurretMesh->SetStaticMesh(turretMeshTemp);
@@ -39,21 +60,6 @@ void ATurretPawn::ReloadAmmo()
 	{
 		Cannon->ReloadAmmo();
 	}
-}
-
-void ATurretPawn::BeginPlay()
-{
-	Super::BeginPlay();
-
-	PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
-
-	FTimerHandle targetingTimerHandle;
-
-	GetWorld()->GetTimerManager().SetTimer(targetingTimerHandle, this, &ATurretPawn::Targeting, TargetingRate, true, TargetingRate);
-
-	FTimerHandle ChangeCannonTimerHandle;
-
-	GetWorld()->GetTimerManager().SetTimer(ChangeCannonTimerHandle, this, &ABasePawn::ChangeMainCannon, ChangeCannonTimer, true, 0);
 }
 
 void ATurretPawn::Targeting()

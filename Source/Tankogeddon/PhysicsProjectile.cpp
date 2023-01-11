@@ -34,10 +34,6 @@ void APhysicsProjectile::Start(UArrowComponent* SpawnPoint, float Range)
 	SetActorRotation(SpawnPoint->GetComponentRotation());
 
 
-	//MoveVector = GetActorForwardVector() * TrajectorySimulationSpeed;
-
-	//MoveVector = MoveVector + GetActorForwardVector() * TrajectorySimulationSpeed;
-
 	FVector2D ViewportSize2D;
 	FVector2D MousePos2D;
 
@@ -53,7 +49,6 @@ void APhysicsProjectile::Start(UArrowComponent* SpawnPoint, float Range)
 
 
 	FVector forward = GetActorForwardVector();  // направление
-
 
 	MoveVector =  forward * DistanceToMouse * TrajectorySimulationSpeed; // TrajectorySimulationSpeed = 1.5
 
